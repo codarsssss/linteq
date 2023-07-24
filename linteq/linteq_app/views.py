@@ -1,17 +1,24 @@
 from django.shortcuts import render
-from .trascription_logic import transcription_audio
+from .trascription_logic import choice_audio_or_video_format
 
 # Create your views here.
 
 
 def index(request):
-    context = {
-        'title': 'Linteq'
-    }
 
     if request.method == 'POST' and request.FILES:
         file = request.FILES['file_input']
-        print(file)
-        transcription_audio(file)
+
+        # Проверка формата файла.
+        context = {
+        'title': 'Linteq',
+        'result': choice_audio_or_video_format(file)
+        }
+        return render(request, 'linteq_app/index.html', context=context)
+
+
+    context = {
+        'title': 'Linteq'
+    }
 
     return render(request, 'linteq_app/index.html', context=context)
