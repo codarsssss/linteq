@@ -18,6 +18,8 @@ def transcription_video(file_input, file_extension):
     return result['text']
 
 
+
+
 # def transcription_audio(file_input, file_extension):
 #     # Обработка аудио
 
