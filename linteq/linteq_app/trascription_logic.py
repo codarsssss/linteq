@@ -18,9 +18,8 @@ def transcription_video(file_input, file_extension):
     return result['text']
 
 
-
-# def transcription_audio(file_input, file_extension):
-#     # Обработка аудио
+def transcription_audio(file_input, file_extension):
+    # Обработка аудио
 
 #     file = file_input.read()
 #     with open(f"audio.{file_extension}", 'wb') as f:
