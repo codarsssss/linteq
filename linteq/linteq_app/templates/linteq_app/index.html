@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Lintech</title>
+    <title>{{ title }}</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -52,7 +52,7 @@
         <div class="header__container container flex">
 
             <div id="logo" class="header__logo">
-                <a href="#home"><img src="{% static 'linteq_app/img/hero.png'%}" alt="Логотип" title="Логотип" /></a>
+                <a href="#home"><img src="{% static 'linteq_app/img/logo-main-3.svg'%}" alt="Логотип" title="Логотип" /></a>
             </div>
 
             <nav id="nav" class="flex header__nav">
@@ -232,7 +232,8 @@
                 <div class="form">
                     <div id="sendmessage">Ваше сообщение отправлено. Спасибо! =)</div>
                     <div id="errormessage"></div>
-                    <form action="" method="post" role="form" class="contactForm">
+                    <form action="{% url 'linteq_app:index' %}" method="POST" role="form" class="contactForm" enctype="multipart/form-data" prefix="form" id="form">
+                        {% csrf_token %}
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя" data-rule="minlen:4" data-msg="Не менее 4 символов" />
@@ -284,7 +285,7 @@
     <script src="{% static 'linteq_app/lib/magnific-popup/magnific-popup.min.js' %}"></script>
     <script src="{% static 'linteq_app/lib/sticky/sticky.js' %}"></script>
     <!-- Contact Form JavaScript File -->
-    <script src="{% static 'linteq_app/contactform/contactform.js' %}"></script>
+{#    <script src="{% static 'linteq_app/contactform/contactform.js' %}"></script>#}
 
     <!-- Template Main Javascript File -->
     <script src="{% static 'linteq_app/js/main.js'%}"></script>
