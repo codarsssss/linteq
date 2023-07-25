@@ -1,4 +1,6 @@
 import whisper
+from whisper import DecodingOptions
+from whisper.utils import WriteSRT, SubtitlesWriter, ResultWriter
 
 
 def transcription_video(file_input, file_extension):
@@ -9,16 +11,27 @@ def transcription_video(file_input, file_extension):
 
     model = whisper.load_model('base')
 
-    option = whisper.DecodingOptions(language='ru', fp16=False)
+    # options = whisper.DecodingOptions(language='ru', fp16=False)
 
     result = model.transcribe(f"audio.{file_extension}")
 
-    print('end')
+    output_dir = "/"  # Указать существующую директорию
+    result_writer = ResultWriter(output_dir)
+
+    # Создание объекта WriteSRT
+    srt_writer = WriteSRT(result_writer)
+
+    # Открытие файла для записи субтитров
+    with open("subtitles.srt", "w") as file:
+    # Запись результатов в файл формата SRT
+        srt_writer.write_result(result, file, options={"max_line_width": 80,
+                                                       "max_line_count": 3,
+                                                       "highlight_words": False})
 
     return result['text']
 
 
-def transcription_audio(file_input, file_extension):
+#def transcription_audio(file_input, file_extension):
     # Обработка аудио
 
 #     file = file_input.read()
