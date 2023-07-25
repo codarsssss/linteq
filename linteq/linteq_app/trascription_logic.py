@@ -10,34 +10,36 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
     # Создание srt
 
     srt_writer = WriteSRT(result_writer)
-    with open("media/subtitles.srt", "w") as file:
+    print('before with')
+    with open("linteq_app/media/subtitles.srt", "w") as file:
+        print('with')
         srt_writer.write_result(transcription_result, file, options)
 
     # Создание vtt
 
     vtt_writer = WriteVTT(result_writer)
-    with open("media/subtitles.vtt", "w") as file:
+    with open("linteq_app/media/subtitles.vtt", "w") as file:
         vtt_writer.write_result(transcription_result, file, options)
 
     # Создание txt
 
     txt_writer = WriteTXT(result_writer)
-    with open("media/subtitles.txt", "w") as file:
+    with open("linteq_app/media/subtitles.txt", "w") as file:
         txt_writer.write_result(transcription_result, file, options)
 
     # Создание json
 
     json_writer = WriteJSON(result_writer)
-    with open("media/subtitles.json", "w") as file:
+    with open("linteq_app/media/subtitles.json", "w") as file:
         json_writer.write_result(transcription_result, file, options)
 
     print('Done!')
 
     return {
-        'srt':f'media/subtitles.srt',
-        'vtt':f'media/subtitles.vtt',
-        'txt':f'media/subtitles.txt',
-        'json':f'media/subtitles.json'
+        'srt':f'linteq_app/media/subtitles.srt',
+        'vtt':f'linteq_app/media/subtitles.vtt',
+        'txt':f'linteq_app/media/subtitles.txt',
+        'json':f'linteq_app/media/subtitles.json'
     }
 
 

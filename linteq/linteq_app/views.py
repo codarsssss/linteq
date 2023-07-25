@@ -21,3 +21,18 @@ def index(request):
     
     return render(request, 'linteq_app/index.html')
 
+
+def transcription_page(request):
+    if request.method == "POST" and request.FILES:
+        form = FilePostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form_object = form.cleaned_data
+
+            return render(request, 'linteq_app/index-sys-UI.html', context={
+                'result': transcript_file(form_object['file'],
+                                          form_object['file_name'],
+                                          str(form_object['file']).split('.')[-1])})
+        else:
+            form = FilePostForm()
+
+    return render(request, 'linteq_app/index-sys-UI.html')

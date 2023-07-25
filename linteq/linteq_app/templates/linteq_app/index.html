@@ -1,30 +1,294 @@
-<!DOCTYPE html>
 {% load static %}
-<html lang="en">
+<!DOCTYPE html>
+
+<html lang="ru">
+
 <head>
-    <meta charset="UTF-8">
-    <title>{{ context.title }}</title>
+    <meta charset="utf-8">
+    <title>Lintech</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicons -->
+    <link href="" rel="icon">
+
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Raleway:300,400,500,700,800|Montserrat:300,400,700">
+
+    <!-- Bootstrap CSS File -->
+    <link rel="stylesheet" href="{% static 'linteq_app/lib/bootstrap/css/bootstrap.min.css' %}">
+
+    <!-- Libraries CSS Files -->
+    <link rel="stylesheet" href="{% static 'linteq_app/lib/font-awesome/css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'linteq_app/lib/animate/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'linteq_app/lib/ionicons/css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'linteq_app/lib/owlcarousel/assets/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'linteq_app/lib/magnific-popup/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'linteq_app/lib/ionicons/css/ionicons.min.css' %}">
+
+    <!-- Main Stylesheet File -->
+    <link rel="stylesheet" href="{% static 'linteq_app/css/style.css' %}">
+
 </head>
-<body>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
 
-    <label for="file">FILE:</label>
-    <input name="file" id="file" type="file">
+<body id="body">
 
-    <label for="file_name">FILE NAME:</label>
-    <input name="file_name" id="file_name" type="text">
+    <section id="topbar" class="topbar d-none d-lg-block">
+        <div class="topbar__container container clearfix">
+            <div class="topbar__contact-info float-left">
+                <i class="fa fa-envelope-o"></i> <a href="mailto:contact@example.com" class="topbar__link">mail@mail.ru</a>
+                <i class="fa fa-phone"></i> <a href="tel:+79000000000" class="topbar__link">+7 (900) 000-00-00</a>
+            </div>
+            <div class="topbar__social-links float-right">
+                <a href="#" class="topbar__link twitter"><i class="fa fa-vk"></i></a>
+                <a href="#" class="topbar__link facebook"><i class="fa fa-telegram"></i></a>
+                <a href="#" class="topbar__link linkedin"><i class="fa fa-youtube"></i></a>
+            </div>
+        </div>
+    </section>
 
-    <button type="submit">
-        send
-    </button>
-</form>
-<div>
-    {{ result }}
-    <a href="{{ result.srt }}" target="_blank">srt download</a>
-    <a href="{{ result.vtt }}" target="_blank">vtt download</a>
-    <a></a>
-    <a></a>
-</div>
+    <header id="header" class="header">
+        <div class="header__container container flex">
+
+            <div id="logo" class="header__logo">
+                <a href="#home"><img src="{% static 'linteq_app/img/hero.png'%}" alt="Логотип" title="Логотип" /></a>
+            </div>
+
+            <nav id="nav" class="flex header__nav">
+                <ul class="header__list list-reset nav-menu flex">
+                    <li class="list__item menu-active">
+                        <a href="#body">Главная</a>
+                    </li>
+                    <li class="list__item">
+                        <a href="#about">О нас</a>
+                    </li>
+                    <li class="list__item">
+                        <a href="#services">Услуги</a>
+                    </li>
+                    <li class="list__item list__item__drop-down">
+                        <a href="#">Продукты</a>
+                        <ul class="list-reset">
+                            <li class="list__item-dropped list-reset">
+                                <a href="#">Аудио в текст</a>
+                            </li>
+                            <li class="list__item-dropped">
+                                <a href="#">Видео в текст</a>
+                            </li>
+                            <li class="list__item-dropped">
+                                <a href="#">Транскрибирование</a>
+                            </li>
+                            <li class="list__item-dropped">
+                                <a href="#">Субтитрирование</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="list__item menu-contact"><a href="#contact">Связаться с нами</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero" class="hero">
+
+        <div class="hero__content">
+            <h2 class="hero__title">Делаем работу переводчиков проще!</h2>
+            <p class="hero__descr">Благодаря нашим интуитивно понятным и наполненным функциями инструментам, переводчики могут фокусироваться на том, в чем они действительно уникальны - в интерпретации и передаче смысла.</p>
+            <div>
+                <a href="{% url 'linteq_app:transcription' %}" class="btn-get-started scrollto go-to__system">Транскрибировать</a>
+                <a href="#services" class="btn-projects scrollto">Услуги</a>
+            </div>
+        </div>
+
+    </section>
+
+
+    <main id="main">
+
+        <section id="about" class="about wow fadeInUp">
+            <div class="about__container container">
+                <div class="row">
+
+                    <div class="col-lg-6 content">
+                        <h2 class="about__title">Заголовок (о нас)</h2>
+                        <p class="about__descr">Описание (о нас)</p>
+
+                        <ul class="about__list list-reset">
+                            <li class="about__item">Сервис 1</li>
+                            <li class="about__item">Сервис 2</li>
+                            <li class="about__item">Сервис 3</li>
+                        </ul>
+
+                    </div>
+
+                    <div class="col-lg-6 about-img">
+                        <img src="{% static 'linteq_app/img/hero.png'%}" class="about__img" alt="">
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <section id="services" class="services">
+            <div class="services__container container">
+                <div class="services__header-section">
+                    <h2 class="services__title">Услуги</h2>
+                    <p class="services__descr">Текст (описание услуг)
+                    </p>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="services__card wow fadeInLeft">
+                            <div class="services__card-icon"><i class="fa fa-bar-chart"></i></div>
+                            <h4 class="services__card-title"><a href="">Название усл.</a></h4>
+                            <p class="services__card-descr">Описание</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="services__card wow fadeInRight">
+                            <div class="services__card-icon"><i class="fa fa-picture-o"></i></div>
+                            <h4 class="services__card-title"><a href="">Название усл.</a></h4>
+                            <p class="services__card-descr">Описание</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="services__card wow fadeInLeft" data-wow-delay="0.2s">
+                            <div class="services__card-icon"><i class="fa fa-shopping-bag"></i></div>
+                            <h4 class="services__card-title"><a href="">Название усл.</a></h4>
+                            <p class="services__card-descr">Описание</p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="services__card wow fadeInRight" data-wow-delay="0.2s">
+                            <div class="services__card-icon"><i class="fa fa-map"></i></div>
+                            <h4 class="services__card-title"><a href="">Название усл.</a></h4>
+                            <p class="services__card-descr">Описание</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <section id="call-to-action" class="cta wow fadeInUp">
+            <div class="ctan__container container">
+                <div class="row">
+                    <div class="col-lg-9 text-center text-lg-left">
+                        <h3 class="cta__title cta-title">Пусто</h3>
+                        <p class="cta__text cta-text">Пусто</p>
+                    </div>
+                    <div class="col-lg-3 cta__btn-box cta-btn-container text-center">
+                        <a class="cta__btn cta-btn align-middle" href="#">Пусто</a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="contact" class="contact wow fadeInUp">
+            <div class="contact__container container">
+                <div class="contact__title-box section-header">
+                    <h2 class="contact__title">Связаться с нами</h2>
+                    <p class="contact__descr">пусто</p>
+                </div>
+
+                <div class="row contact__info contact-info">
+
+                    <div class="col-md-4">
+                        <div class="contact__adress contact__card-box contact-address">
+                            <i class="ion-ios-location-outline"></i>
+                            <h3 class="contact__heading">Адрес</h3>
+                            <address class="contact__info-descr">Пусто</address>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="contact__mob contact__card-box contact-phone">
+                            <i class="ion-ios-telephone-outline"></i>
+                            <h3 class="contact__heading">Номер</h3>
+                            <p class="contact__info-descr"><a href="tel:+155895548855">+790000000</a></p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="contact__email contact__card-box contact-email">
+                            <i class="ion-ios-email-outline"></i>
+                            <h3 class="contact__heading">Email</h3>
+                            <p class="contact__info-descr"><a href="mailto:info@example.com">??@mail.com</a></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="form">
+                    <div id="sendmessage">Ваше сообщение отправлено. Спасибо! =)</div>
+                    <div id="errormessage"></div>
+                    <form action="" method="post" role="form" class="contactForm">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя" data-rule="minlen:4" data-msg="Не менее 4 символов" />
+                                <div class="validation"></div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="email" class="form-control" name="email" id="email" placeholder="Ваш Email" data-rule="email" data-msg="Неверный email" />
+                                <div class="validation"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="subject" id="subject" placeholder="Тема обращения" data-rule="minlen:4" data-msg="Не менее 8 символов" />
+                            <div class="validation"></div>
+                        </div>
+                        <div class="form-group">
+                            <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Опишите вопрос, который вас интересует" placeholder="Сообщение"></textarea>
+                            <div class="validation"></div>
+                        </div>
+                        <div class="text-center"><button type="submit">Отправить</button></div>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!--==========================
+    Footer
+  ============================-->
+    <footer id="footer">
+        <div class="container">
+
+        </div>
+    </footer>
+    <!-- #footer -->
+
+    <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="{% static 'linteq_app/lib/jquery/jquery.min.js'%}"></script>
+    <script src="{% static 'linteq_app/lib/jquery/jquery-migrate.min.js' %}"></script>
+    <script src="{% static 'linteq_app/lib/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'linteq_app/lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'linteq_app/lib/superfish/hoverIntent.js' %}"></script>
+    <script src="{% static 'linteq_app/lib/superfish/superfish.min.js' %}"></script>
+    <script src="{% static 'linteq_app/lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'linteq_app/lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'linteq_app/lib/magnific-popup/magnific-popup.min.js' %}"></script>
+    <script src="{% static 'linteq_app/lib/sticky/sticky.js' %}"></script>
+    <!-- Contact Form JavaScript File -->
+    <script src="{% static 'linteq_app/contactform/contactform.js' %}"></script>
+
+    <!-- Template Main Javascript File -->
+    <script src="{% static 'linteq_app/js/main.js'%}"></script>
+
 </body>
+
 </html>
