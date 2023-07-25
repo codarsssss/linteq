@@ -33,16 +33,21 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
 
     print('Done!')
 
+    return {
+        'srt':f'media/subtitles.srt',
+        'vtt':f'media/subtitles.vtt',
+        'txt':f'media/subtitles.txt',
+        'json':f'media/subtitles.json'
+    }
+
 
 def transcription_video(file_input, file_extension):
-    # Обработка видео
+    
     file = file_input.read()
     with open(f"audio.{file_extension}", 'wb') as f:
         f.write(file)
 
     model = whisper.load_model('base')
-
-    # options = whisper.DecodingOptions(language='ru', fp16=False)
 
     result = model.transcribe(f"audio.{file_extension}")
 
@@ -52,5 +57,5 @@ def transcription_video(file_input, file_extension):
                 "max_line_count": 3,
                 "highlight_words": False}
     
-    write_some_files(result, options, file, output_dir)
+    return write_some_files(result, options, file, output_dir)
 
