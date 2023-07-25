@@ -41,15 +41,15 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
     }
 
 
-def transcription_video(file_input, file_extension):
+def transcript_file(file_input, file_name, file_extension):
     
     file = file_input.read()
-    with open(f"audio.{file_extension}", 'wb') as f:
+    with open(f"{file_name}.{file_extension}", 'wb') as f:
         f.write(file)
 
     model = whisper.load_model('base')
 
-    result = model.transcribe(f"audio.{file_extension}")
+    result = model.transcribe(f"{file_name}.{file_extension}")
 
     output_dir = "/"
 

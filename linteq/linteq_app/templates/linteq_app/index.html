@@ -8,9 +8,13 @@
 <body>
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ context.title }}
-    <label for="file_input">file</label>
-    <input type="file" name="file_input" id="file_input">
+
+    <label for="file">FILE:</label>
+    <input name="file" id="file" type="file">
+
+    <label for="file_name">FILE NAME:</label>
+    <input name="file_name" id="file_name" type="text">
+
     <button type="submit">
         send
     </button>
