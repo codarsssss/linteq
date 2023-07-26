@@ -130,9 +130,9 @@
                 </div>
             </div>
         </div>
-
-    {{ result }}
-    <a href="{{ result.srt }}" target="_blank">srt download</a>
+        {% if result.srt %}
+    <a href="{% url 'linteq_app:download' file_path=result.srt  %}" target="_blank">srt download</a>
+        {% endif %}
     <a href="{{ result.vtt }}" target="_blank">vtt download</a>
     <a></a>
     <a></a>

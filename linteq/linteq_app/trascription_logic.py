@@ -4,7 +4,7 @@ from whisper import DecodingOptions
 from whisper.utils import WriteSRT, ResultWriter, WriteVTT, WriteTXT, WriteJSON
 
 
-def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, user_folder_path):
+def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, user_folder_path, files_path):
 
     user_folder_path = user_folder_path + '/output'
 
@@ -40,10 +40,10 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
     print('Done!')
 
     return {
-        'srt': f'download/{user_folder_path}/subtitles.srt',
-        'vtt': f'download/{user_folder_path}/subtitles.vtt',
-        'txt': f'download/{user_folder_path}/subtitles.txt',
-        'json': f'download/{user_folder_path}/subtitles.json'
+        'srt': f'{files_path}/output/subtitles.srt',
+        'vtt': f'{files_path}/output/subtitles.vtt',
+        'txt': f'{files_path}/output/subtitles.txt',
+        'json': f'{files_path}/output/subtitles.json'
     }
 
 
@@ -55,6 +55,8 @@ def transcript_file(file_input, file_name, file_extension, model_type, dt_now):
     model = whisper.load_model(model_type)
 
     user_folder_path = f'media/user_requests/{dt_now}'
+    
+    files_path = f'user_requests/{dt_now}'
 
     if os.path.exists(user_folder_path):
         print('папка есть')
@@ -78,5 +80,5 @@ def transcript_file(file_input, file_name, file_extension, model_type, dt_now):
                 "max_line_count": 3,
                 "highlight_words": False}
 
-    return write_some_files(result, options, file, output_dir, user_folder_path)
+    return write_some_files(result, options, file, output_dir, user_folder_path, files_path)
 
