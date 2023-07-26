@@ -2,6 +2,7 @@ import os
 import whisper
 from whisper import DecodingOptions
 from whisper.utils import WriteSRT, ResultWriter, WriteVTT, WriteTXT, WriteJSON
+from .models import FileData
 
 
 def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, user_folder_path, files_path):
@@ -49,12 +50,16 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
 
 def transcript_file(file_input, file_name, file_extension, model_type, dt_now):
 
-
     file = file_input.read()
 
     model = whisper.load_model(model_type)
 
     user_folder_path = f'media/user_requests/{dt_now}'
+
+    file_data_model = FileData()
+
+    file_data_model.path = user_folder_path
+    file_data_model.save()
     
     files_path = f'user_requests/{dt_now}'
 
