@@ -6,5 +6,6 @@ app_name = 'linteq_app'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('transcription', views.transcription_page, name='transcription')
+    path('transcription', views.transcription_page, name='transcription'),
+    path('download/<path:file_path>', views.download_files, name='download')
 ]

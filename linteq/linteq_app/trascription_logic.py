@@ -1,63 +1,82 @@
+import os
 import whisper
 from whisper import DecodingOptions
 from whisper.utils import WriteSRT, ResultWriter, WriteVTT, WriteTXT, WriteJSON
 
 
+def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, user_folder_path):
 
-def write_some_files(transcription_result: dict, options: dict, file, output_dir: str):
+    user_folder_path = user_folder_path + '/output'
+
+    os.mkdir(user_folder_path)
+
     result_writer = ResultWriter(output_dir)
 
     # Создание srt
 
     srt_writer = WriteSRT(result_writer)
-    print('before with')
-    with open("linteq_app/media/subtitles.srt", "w") as file:
-        print('with')
+    with open(f"{user_folder_path}/subtitles.srt", "w") as file:
+
         srt_writer.write_result(transcription_result, file, options)
 
     # Создание vtt
 
     vtt_writer = WriteVTT(result_writer)
-    with open("linteq_app/media/subtitles.vtt", "w") as file:
+    with open(f"{user_folder_path}/subtitles.vtt", "w") as file:
         vtt_writer.write_result(transcription_result, file, options)
 
     # Создание txt
 
     txt_writer = WriteTXT(result_writer)
-    with open("linteq_app/media/subtitles.txt", "w") as file:
+    with open(f"{user_folder_path}/subtitles.txt", "w") as file:
         txt_writer.write_result(transcription_result, file, options)
 
     # Создание json
 
     json_writer = WriteJSON(result_writer)
-    with open("linteq_app/media/subtitles.json", "w") as file:
+    with open(f"{user_folder_path}/subtitles.json", "w") as file:
         json_writer.write_result(transcription_result, file, options)
 
     print('Done!')
 
     return {
-        'srt':f'linteq_app/media/subtitles.srt',
-        'vtt':f'linteq_app/media/subtitles.vtt',
-        'txt':f'linteq_app/media/subtitles.txt',
-        'json':f'linteq_app/media/subtitles.json'
+        'srt': f'download/{user_folder_path}/subtitles.srt',
+        'vtt': f'download/{user_folder_path}/subtitles.vtt',
+        'txt': f'download/{user_folder_path}/subtitles.txt',
+        'json': f'download/{user_folder_path}/subtitles.json'
     }
 
 
-def transcript_file(file_input, file_name, file_extension):
-    
+def transcript_file(file_input, file_name, file_extension, model_type, dt_now):
+
+
     file = file_input.read()
-    with open(f"{file_name}.{file_extension}", 'wb') as f:
-        f.write(file)
 
-    model = whisper.load_model('base')
+    model = whisper.load_model(model_type)
 
-    result = model.transcribe(f"{file_name}.{file_extension}")
+    user_folder_path = f'media/user_requests/{dt_now}'
+
+    if os.path.exists(user_folder_path):
+        print('папка есть')
+    else:
+        os.makedirs(user_folder_path)
+
+    if file_name != '':
+        file_name = file_name[:-len(file_extension)]
+        with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
+            f.write(file)
+        result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
+    else:
+        file_name = str(file_input)[:-len(file_extension)-1]
+        with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
+            f.write(file)
+        result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
 
     output_dir = "/"
 
     options = {"max_line_width": 80,
                 "max_line_count": 3,
                 "highlight_words": False}
-    
-    return write_some_files(result, options, file, output_dir)
+
+    return write_some_files(result, options, file, output_dir, user_folder_path)
 

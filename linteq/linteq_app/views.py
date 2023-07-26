@@ -1,9 +1,19 @@
+import os
+from datetime import datetime
+from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect
 from .trascription_logic import transcript_file
 from .forms import FilePostForm, ConsultationForm
 from django.contrib import messages
+# from transliterate import slugify
+from django.conf import settings
 
-# Create your views here.
+
+def download_files(request, file_path):
+    file_full_path = os.path.join(settings.MEDIA_ROOT, file_path)
+    if os.path.exists(file_full_path):
+        return FileResponse(open(file_full_path, 'rb'))
+    raise Http404('Такого файла не существует :(')
 
 
 def handle_form(request, form_class):
@@ -34,11 +44,12 @@ def transcription_page(request):
         form = FilePostForm(request.POST, request.FILES)
         if form.is_valid():
             form_object = form.cleaned_data
-
             return render(request, 'linteq_app/index-sys-UI.html', context={
                 'result': transcript_file(form_object['file'],
                                           form_object['file_name'],
-                                          str(form_object['file']).split('.')[-1])})
+                                          str(form_object['file']).split('.')[-1],
+                                          form_object['model_type'],
+                                          datetime.now())})
         else:
             form = FilePostForm()
 

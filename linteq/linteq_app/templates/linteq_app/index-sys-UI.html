@@ -30,8 +30,9 @@
                 <div class="mb-3">
                     <label for="model_type" class="sys__form-label form-label">Выбор модели</label>
                     <select id="model_type" name="model_type" class="sys__form-select form-select">
-                    <option value="medium">средняя</option>
-                    <option value="large">большая</option>
+                        <option value="base">базовая</option>
+                        <option value="medium">средняя</option>
+                        <option value="large">большая</option>
                 </select>
                 </div>
             </div>
@@ -59,20 +60,20 @@
                 </div>
             </div>
 
-            <div class="input-style">
-                <div class="sys__form-check mb-3 form-check">
-                    <input type="checkbox" id="timestamps" name="timestamps" class="sys__form-check-input form-check-input">
-                    <label for="timestamps" class="sys__form-check-label form-check-label">Добавить субтитры</label>
-                </div>
-
-                <div class="mb-3">
-                    <label for="file_type" class="sys__form-label form-label">Формат файла с субтирами</label>
-                    <select id="file_type" name="file_type" class="sys__form-select form-select">
-                    <option value="srt">srt</option>
-                    <option value="vtt">vtt</option>
-                </select>
-                </div>
-            </div>
+{#            <div class="input-style">#}
+{#                <div class="sys__form-check mb-3 form-check">#}
+{#                    <input type="checkbox" id="timestamps" name="timestamps" class="sys__form-check-input form-check-input">#}
+{#                    <label for="timestamps" class="sys__form-check-label form-check-label">Добавить субтитры</label>#}
+{#                </div>#}
+{##}
+{#                <div class="mb-3">#}
+{#                    <label for="file_type" class="sys__form-label form-label">Формат файла с субтирами</label>#}
+{#                    <select id="file_type" name="file_type" class="sys__form-select form-select">#}
+{#                    <option value="srt">srt</option>#}
+{#                    <option value="vtt">vtt</option>#}
+{#                </select>#}
+{#                </div>#}
+{#            </div>#}
 
             <div class="input-style translate-lang">
                 <div class="sys__form-check mb-3 form-check">
