@@ -141,11 +141,12 @@
             </div>
         </div>
         {% if result.srt %}
-    <a href="{% url 'linteq_app:download' file_path=result.srt  %}" download>srt download</a>
+            <a href="{% url 'linteq_app:download' file_path=result.srt %}" download>srt download</a>
+            <a href="{% url 'linteq_app:download' file_path=result.vtt  %}" download>vtt download</a>
+            <a href="{% url 'linteq_app:download' file_path=result.txt  %}" download>txt download</a>
+            <a href="{% url 'linteq_app:download' file_path=result.json  %}" download>json download</a>
+
         {% endif %}
-    <a href="{{ result.vtt }}" target="_blank">vtt download</a>
-    <a></a>
-    <a></a>
     </div>
 
     <script src="{% static 'linteq_app/js/limit_file_size.js'%}"></script>

@@ -7,7 +7,7 @@ from .clear_logic import clear_func
 from django.conf import settings
 
 
-def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, user_folder_path, files_path):
+def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, user_folder_path, files_path, file_name):
 
     user_folder_path = user_folder_path + '/output'
 
@@ -18,35 +18,35 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
     # Создание srt
 
     srt_writer = WriteSRT(result_writer)
-    with open(f"{user_folder_path}/subtitles.srt", "w") as file:
+    with open(f"{user_folder_path}/{file_name}.srt", "w") as file:
 
         srt_writer.write_result(transcription_result, file, options)
 
     # Создание vtt
 
     vtt_writer = WriteVTT(result_writer)
-    with open(f"{user_folder_path}/subtitles.vtt", "w") as file:
+    with open(f"{user_folder_path}/{file_name}.vtt", "w") as file:
         vtt_writer.write_result(transcription_result, file, options)
 
     # Создание txt
 
     txt_writer = WriteTXT(result_writer)
-    with open(f"{user_folder_path}/subtitles.txt", "w") as file:
+    with open(f"{user_folder_path}/{file_name}.txt", "w") as file:
         txt_writer.write_result(transcription_result, file, options)
 
     # Создание json
 
     json_writer = WriteJSON(result_writer)
-    with open(f"{user_folder_path}/subtitles.json", "w") as file:
+    with open(f"{user_folder_path}/{file_name}.json", "w") as file:
         json_writer.write_result(transcription_result, file, options)
 
     print('Done!')
 
     return {
-        'srt': f'{files_path}/output/subtitles.srt',
-        'vtt': f'{files_path}/output/subtitles.vtt',
-        'txt': f'{files_path}/output/subtitles.txt',
-        'json': f'{files_path}/output/subtitles.json'
+        'srt': f'{files_path}/output/{file_name}.srt',
+        'vtt': f'{files_path}/output/{file_name}.vtt',
+        'txt': f'{files_path}/output/{file_name}.txt',
+        'json': f'{files_path}/output/{file_name}.json'
     }
 
 
@@ -74,7 +74,7 @@ def transcript_file(file_input, file_name, file_extension, model_type, dt_now):
         os.makedirs(user_folder_path)
 
     if file_name != '':
-        file_name = file_name[:-len(file_extension)].replace('/', '')
+        file_name = file_name.replace('/', '')
         with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
             f.write(file)
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
@@ -90,5 +90,5 @@ def transcript_file(file_input, file_name, file_extension, model_type, dt_now):
                 "max_line_count": 3,
                 "highlight_words": False}
 
-    return write_some_files(result, options, file, output_dir, user_folder_path, files_path)
+    return write_some_files(result, options, file, output_dir, user_folder_path, files_path, file_name)
 
