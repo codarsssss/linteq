@@ -64,7 +64,7 @@ def transcript_file(file_input, file_name, file_extension, model_type, dt_now):
         os.makedirs(user_folder_path)
 
     if file_name != '':
-        file_name = file_name[:-len(file_extension)]
+        file_name = file_name[:-len(file_extension)].replace('/', '')
         with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
             f.write(file)
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
