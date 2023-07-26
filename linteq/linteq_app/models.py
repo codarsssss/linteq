@@ -1,8 +1,5 @@
-import datetime
-from datetime import timedelta
-
 from django.db import models
-from django.utils import timezone
+
 
 
 class Consultation(models.Model):
@@ -24,7 +21,7 @@ class Consultation(models.Model):
 class FileData(models.Model):
     path = models.CharField(max_length=255, verbose_name='адрес')
     create_date = models.DateTimeField(auto_now_add=True)
-    delete_date = models.DateTimeField(default=timezone.now() + timezone.timedelta(hours=1))
+    delete_date = models.DateTimeField()
 
     class Meta:
         ordering = ['-create_date']

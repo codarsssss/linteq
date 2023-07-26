@@ -1,8 +1,10 @@
 import os
+from datetime import timedelta
 import whisper
-from whisper import DecodingOptions
 from whisper.utils import WriteSRT, ResultWriter, WriteVTT, WriteTXT, WriteJSON
 from .models import FileData
+from .clear_logic import clear_func
+from django.conf import settings
 
 
 def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, user_folder_path, files_path):
@@ -59,7 +61,10 @@ def transcript_file(file_input, file_name, file_extension, model_type, dt_now):
     file_data_model = FileData()
 
     file_data_model.path = user_folder_path
+    file_data_model.delete_date = dt_now + timedelta(hours=settings.STORAGE_TIME)
     file_data_model.save()
+
+    clear_func()
     
     files_path = f'user_requests/{dt_now}'
 

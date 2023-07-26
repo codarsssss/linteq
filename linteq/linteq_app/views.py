@@ -5,7 +5,6 @@ from django.shortcuts import render, redirect
 from .trascription_logic import transcript_file
 from .forms import FilePostForm, ConsultationForm
 from django.contrib import messages
-# from transliterate import slugify
 from django.conf import settings
 
 
