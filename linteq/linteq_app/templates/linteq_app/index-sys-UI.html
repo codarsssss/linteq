@@ -23,7 +23,7 @@
             {% csrf_token %}
             <div class="mb-3">
                 <label for="recorder" class="sys__form-label form-label">Загрузить файл</label>
-                <input type="file" id="file" name="file" class="sys__form-control form-control" required>
+                <input type="file" id="file" name="file" class="sys__form-control form-control" accept="audio/*, video/*" required>
             </div>
 
             <div class="alert alert-danger d-flex align-items-center justify-content-center align-content-center d-none" role="alert" id="er_message">
