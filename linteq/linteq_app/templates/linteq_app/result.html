@@ -1,0 +1,36 @@
+{% extends 'linteq_app/base.html' %}
+
+{% load static %}
+
+{% block content %}
+{% if result.srt %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="m-5 w-auto">
+            <a href="{% url 'linteq_app:download' file_path=result.srt %}"
+                class="btn btn-outline-primary"  download><img
+                src="{% static 'linteq_app/img/extensions/srt-file-format-symbol.png' %}" alt="SRT">
+            </a>
+        </div>
+        <div class="m-5 w-auto">
+            <a href="{% url 'linteq_app:download' file_path=result.vtt %}"
+                class="btn btn-outline-primary" download><img
+                src="{% static 'linteq_app/img/extensions/icons8-file-64.png' %}" alt="VTT">
+            </a>
+        </div>
+        <div class="m-5 w-auto">
+            <a href="{% url 'linteq_app:download' file_path=result.txt %}"
+                class="btn btn-outline-primary " download><img
+                src="{% static 'linteq_app/img/extensions/txt-file-symbol.png' %}" alt="TXT">
+            </a>
+        </div>
+        <div class="m-5 w-auto">
+            <a href="{% url 'linteq_app:download' file_path=result.json %}"
+                class="btn btn-outline-primary " download><img
+                src="{% static 'linteq_app/img/extensions/json-file.png' %}" alt="TXT">
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

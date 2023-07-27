@@ -5,20 +5,27 @@
 {% block content %}
 
 <body>
+
+<section>
     <div class="sys__container container mt-4">
         <h1 class="sys__title mb-4">Транскрибировать аудио/видео файл в текст</h1>
         <form id="sys__conversion-form conversion-form" enctype="multipart/form-data" method="POST">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="recorder" class="sys__form-label form-label">Загрузить файл</label>
-                <input type="file" id="file" name="file" class="sys__form-control form-control" accept="audio/*, video/*" required>
+                <input type="file" id="file" name="file" class="sys__form-control form-control"
+                       accept="audio/*, video/*" required>
             </div>
 
-            <div class="alert alert-danger d-flex align-items-center justify-content-center align-content-center d-none" role="alert" id="er_message">
-                <svg class="me-3" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg%22%3E">
-<path d="M12 9V14M12 21.41H5.93999C2.46999 21.41 1.01999 18.93 2.69999 15.9L5.81999 10.28L8.75999 5C10.54 1.79 13.46 1.79 15.24 5L18.18 10.29L21.3 15.91C22.98 18.94 21.52 21.42 18.06 21.42H12V21.41Z" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M11.995 17H12.004" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+            <div class="alert alert-danger d-flex align-items-center justify-content-center align-content-center d-none"
+                 role="alert" id="er_message">
+                <svg class="me-3" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     xmlns="http://www.w3.org/2000/svg%22%3E">
+                    <path d="M12 9V14M12 21.41H5.93999C2.46999 21.41 1.01999 18.93 2.69999 15.9L5.81999 10.28L8.75999 5C10.54 1.79 13.46 1.79 15.24 5L18.18 10.29L21.3 15.91C22.98 18.94 21.52 21.42 18.06 21.42H12V21.41Z"
+                          stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M11.995 17H12.004" stroke="black" stroke-width="2" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                </svg>
                 <div>
                     Размер файла не должен превышать 1Гб!
                 </div>
@@ -31,7 +38,7 @@
                         <option value="base">базовая</option>
                         <option value="medium">средняя</option>
                         <option value="large">большая</option>
-                </select>
+                    </select>
                 </div>
             </div>
 
@@ -39,43 +46,44 @@
                 <div class="mb-3">
                     <label for="language" class="sys__form-label form-label">Язык оригинала</label>
                     <select id="language" name="language" class="sys__form-select form-select">
-                    <option value="ru">Русский</option>
-                    <option value="en">Английский</option>
-                    <option value="es">Испанский</option>
-                    <option value="de">Немецкий</option>
-                    <option value="ja">Японский</option>
-                    <option value="pl">Польский</option>
-                    <option value="it">Итальянский</option>
-                    <option value="pt">Португальский</option>
-                    <option value="da">Датский</option>
-                    <option value="ca">Каталанский</option>
-                    <option value="fr">Французский</option>
-                    <option value="tr">Турецкий</option>
-                    <option value="sv">Шведский</option>
-                    <option value="uk">Украинский</option>
-                    <option value="ml">Малайский</option>
-                </select>
+                        <option value="ru">Русский</option>
+                        <option value="en">Английский</option>
+                        <option value="es">Испанский</option>
+                        <option value="de">Немецкий</option>
+                        <option value="ja">Японский</option>
+                        <option value="pl">Польский</option>
+                        <option value="it">Итальянский</option>
+                        <option value="pt">Португальский</option>
+                        <option value="da">Датский</option>
+                        <option value="ca">Каталанский</option>
+                        <option value="fr">Французский</option>
+                        <option value="tr">Турецкий</option>
+                        <option value="sv">Шведский</option>
+                        <option value="uk">Украинский</option>
+                        <option value="ml">Малайский</option>
+                    </select>
                 </div>
             </div>
 
-{#            <div class="input-style">#}
-{#                <div class="sys__form-check mb-3 form-check">#}
-{#                    <input type="checkbox" id="timestamps" name="timestamps" class="sys__form-check-input form-check-input">#}
-{#                    <label for="timestamps" class="sys__form-check-label form-check-label">Добавить субтитры</label>#}
-{#                </div>#}
-{##}
-{#                <div class="mb-3">#}
-{#                    <label for="file_type" class="sys__form-label form-label">Формат файла с субтирами</label>#}
-{#                    <select id="file_type" name="file_type" class="sys__form-select form-select">#}
-{#                    <option value="srt">srt</option>#}
-{#                    <option value="vtt">vtt</option>#}
-{#                </select>#}
-{#                </div>#}
-{#            </div>#}
+            {#            <div class="input-style">#}
+            {#                <div class="sys__form-check mb-3 form-check">#}
+            {#                    <input type="checkbox" id="timestamps" name="timestamps" class="sys__form-check-input form-check-input">#}
+            {#                    <label for="timestamps" class="sys__form-check-label form-check-label">Добавить субтитры</label>#}
+            {#                </div>#}
+            {##}
+            {#                <div class="mb-3">#}
+            {#                    <label for="file_type" class="sys__form-label form-label">Формат файла с субтирами</label>#}
+            {#                    <select id="file_type" name="file_type" class="sys__form-select form-select">#}
+            {#                    <option value="srt">srt</option>#}
+            {#                    <option value="vtt">vtt</option>#}
+            {#                </select>#}
+            {#                </div>#}
+            {#            </div>#}
 
             <div class="input-style translate-lang">
                 <div class="sys__form-check mb-3 form-check">
-                    <input type="checkbox" id="translate-lang" name="translate-lang" class="sys__form-check-input form-check-input">
+                    <input type="checkbox" id="translate-lang" name="translate-lang"
+                           class="sys__form-check-input form-check-input">
                     <label for="translate-lang" class="sys__form-check-label form-check-label">Выполнить перевод</label>
                 </div>
 
@@ -107,8 +115,9 @@
             </div>
 
             <div class="d-flex align-items-center mb-3">
-                <button type="submit" id="submit" class="btn sys__btn-primary btn-primary">
-                    <span class="sys__spinner-border spinner-border spinner-border-sm d-none" id="spinner" role="status" aria-hidden="true"></span>
+                <button type="submit" id="submit" class="btn sys__btn-primary btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    <span class="sys__spinner-border spinner-border spinner-border-sm d-none" id="spinner" role="status"
+                          aria-hidden="true"></span>
                     Транскрибировать
                 </button>
             </div>
@@ -116,45 +125,30 @@
 
     </div>
 
-    <div>
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-6">
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
-                             aria-valuenow="75"
-                             aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>
-                    </div>
-                </div>
+
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content mw-25 bg-transparent border-0">
+                <img src="{% static 'linteq_app/img/preloader.gif' %}" alt="preload_icon">
             </div>
         </div>
-        {% if result.srt %}
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="m-5 w-auto">
-                        <a href="{% url 'linteq_app:download' file_path=result.srt %}"
-                           class="btn btn-outline-primary"  download><img
-                                src="{% static 'linteq_app/img/extensions/srt-file-format-symbol.png' %}" alt="SRT"></a>
-                    </div>
-                    <div class="m-5 w-auto">
-                        <a href="{% url 'linteq_app:download' file_path=result.vtt %}"
-                           class="btn btn-outline-primary" download><img
-                                src="{% static 'linteq_app/img/extensions/icons8-file-64.png' %}" alt="VTT"></a>
-                    </div>
-                    <div class="m-5 w-auto">
-                        <a href="{% url 'linteq_app:download' file_path=result.txt %}"
-                           class="btn btn-outline-primary " download><img
-                                src="{% static 'linteq_app/img/extensions/txt-file-symbol.png' %}" alt="TXT"></a>
-                    </div>
-                    <div class="m-5 w-auto">
-                        <a href="{% url 'linteq_app:download' file_path=result.json %}"
-                           class="btn btn-outline-primary " download><img
-                                src="{% static 'linteq_app/img/extensions/json-file.png' %}" alt="TXT"></a>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
     </div>
+</section>
+
+{#    <div>#}
+{#        <div class="container">#}
+{#            <div class="row justify-content-center">#}
+{#                <div class="col-6">#}
+{#                    <div class="progress">#}
+{#                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"#}
+{#                             aria-valuenow="75"#}
+{#                             aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
 
 
 

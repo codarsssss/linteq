@@ -43,12 +43,12 @@ def transcription_page(request):
         form = FilePostForm(request.POST, request.FILES)
         if form.is_valid():
             form_object = form.cleaned_data
-            return render(request, 'linteq_app/index-sys-UI.html', context={
-                'result': transcript_file(form_object['file'],
+            request.session['result'] = transcript_file(form_object['file'],
                                           form_object['file_name'],
                                           str(form_object['file']).split('.')[-1],
                                           form_object['model_type'],
-                                          datetime.now())})
+                                          datetime.now())
+            return redirect('linteq_app:result')
         else:
             form = FilePostForm()
 
@@ -57,3 +57,11 @@ def transcription_page(request):
     }
 
     return render(request, 'linteq_app/index-sys-UI.html', context=context)
+
+
+def result_page(request):
+    context = {
+        'title': 'Linteq',
+        'result': request.session.get('result')
+    }
+    return render(request, 'linteq_app/result.html', context=context)
