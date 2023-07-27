@@ -44,8 +44,8 @@
 
             <div class="input-style">
                 <div class="mb-3">
-                    <label for="language" class="sys__form-label form-label">Язык оригинала</label>
-                    <select id="language" name="language" class="sys__form-select form-select">
+                    <label for="original_language" class="sys__form-label form-label">Язык оригинала</label>
+                    <select id="original_language" name="original_language" class="sys__form-select form-select">
                         <option value="ru">Русский</option>
                         <option value="en">Английский</option>
                         <option value="es">Испанский</option>
@@ -80,16 +80,16 @@
             {#                </div>#}
             {#            </div>#}
 
-            <div class="input-style translate-lang">
+            <div class="input-style translate_checkBox">
                 <div class="sys__form-check mb-3 form-check">
-                    <input type="checkbox" id="translate-lang" name="translate-lang"
+                    <input type="checkbox" id="translate_checkBox" name="translate_checkBox"
                            class="sys__form-check-input form-check-input">
-                    <label for="translate-lang" class="sys__form-check-label form-check-label">Выполнить перевод</label>
+                    <label for="translate_checkBox" class="sys__form-check-label form-check-label">Выполнить перевод</label>
                 </div>
 
                 <div class="mb-3">
-                    <label for="lang" class="sys__form-label form-label">Язык перевода</label>
-                    <select id="lang" name="lang" class="sys__form-select form-select">
+                    <label for="translate_language" class="sys__form-label form-label">Язык перевода</label>
+                    <select id="translate_language" name="translate_language" class="sys__form-select form-select">
                         <option value="ru">Русский</option>
                         <option value="en">Английский</option>
                         <option value="es">Испанский</option>

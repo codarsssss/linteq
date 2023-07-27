@@ -50,8 +50,9 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
     }
 
 
-def translate_text(result, translate_language):
-    pass
+def translate_text(result, translate_language, model):
+    translate_result = model.translate(result)
+    print(translate_result)
 
 
 def transcript_file(file_input, file_name, file_extension, 
@@ -87,6 +88,7 @@ def transcript_file(file_input, file_name, file_extension,
         with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
             f.write(file)
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
+        translate_text(result, translate_language, model)
     else:
         file_name = str(file_input)[:-len(file_extension)-1]
         with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
@@ -101,7 +103,7 @@ def transcript_file(file_input, file_name, file_extension,
     
     # Логика перевода текста
     print(translate_checkBox)
-    if translate_checkBox:
-        translate_text(result, translate_language)
+    # if translate_checkBox:
+    #     translate_text(result, translate_language)
 
     return write_some_files(result, options, file, output_dir, user_folder_path, files_path, file_name)
