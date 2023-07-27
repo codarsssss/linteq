@@ -47,7 +47,10 @@ def transcription_page(request):
                                           form_object['file_name'],
                                           str(form_object['file']).split('.')[-1],
                                           form_object['model_type'],
-                                          datetime.now())
+                                          datetime.now(),
+                                          form_object['original_language'],
+                                          form_object['translate_language'],
+                                          form_object['translate_checkBox'])
             return redirect('linteq_app:result')
         else:
             form = FilePostForm()

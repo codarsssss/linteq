@@ -50,18 +50,27 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
     }
 
 
-def transcript_file(file_input, file_name, file_extension, model_type, dt_now):
+def translate_text(result, translate_language):
+    pass
+
+
+def transcript_file(file_input, file_name, file_extension, 
+                    model_type, dt_now, original_language,
+                    translate_language, translate_checkBox):
 
     file = file_input.read()
 
     model = whisper.load_model(model_type)
+    option = whisper.DecodingOptions(language=original_language,
+                                     fp16=False)
 
     user_folder_path = f'media/user_requests/{dt_now}'
 
     file_data_model = FileData()
 
     file_data_model.path = user_folder_path
-    file_data_model.delete_date = dt_now + timedelta(minutes=settings.STORAGE_TIME)
+    file_data_model.delete_date = dt_now + timedelta(
+        minutes=settings.STORAGE_TIME)
     file_data_model.save()
 
     clear_func()
@@ -89,6 +98,10 @@ def transcript_file(file_input, file_name, file_extension, model_type, dt_now):
     options = {"max_line_width": 80,
                 "max_line_count": 3,
                 "highlight_words": False}
+    
+    # Логика перевода текста
+    print(translate_checkBox)
+    if translate_checkBox:
+        translate_text(result, translate_language)
 
     return write_some_files(result, options, file, output_dir, user_folder_path, files_path, file_name)
-

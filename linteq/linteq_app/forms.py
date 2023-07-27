@@ -15,5 +15,7 @@ class FilePostForm(forms.Form):
     model_type = forms.CharField()
     # #max_line_width = forms.IntegerField()
     # max_line_count = forms.IntegerField()
-    # language = forms.CharField()
+    original_language = forms.CharField()
+    translate_checkBox = forms.CharField()
+    translate_language = forms.CharField()
     file_name = forms.CharField(required=False)
