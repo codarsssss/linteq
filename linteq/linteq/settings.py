@@ -125,4 +125,4 @@ MEDIA_URL = 'media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STORAGE_TIME = 5
+STORAGE_TIME = 3

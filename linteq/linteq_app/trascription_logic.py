@@ -61,7 +61,7 @@ def transcript_file(file_input, file_name, file_extension, model_type, dt_now):
     file_data_model = FileData()
 
     file_data_model.path = user_folder_path
-    file_data_model.delete_date = dt_now + timedelta(hours=settings.STORAGE_TIME)
+    file_data_model.delete_date = dt_now + timedelta(minutes=settings.STORAGE_TIME)
     file_data_model.save()
 
     clear_func()
