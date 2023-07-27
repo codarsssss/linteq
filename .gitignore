@@ -160,3 +160,5 @@ cython_debug/
 .idea/
 
 /linteq/linteq_app/migrations/*.py
+/linteq/media/user_requests/*/
+
