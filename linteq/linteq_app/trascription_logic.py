@@ -6,6 +6,7 @@ from .models import FileData
 from .clear_logic import clear_func
 from django.conf import settings
 import subprocess
+from transliterate import slugify
 
 
 def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, 
@@ -65,6 +66,8 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
 
 def translate_speech_to_english(file_path, original_language, translate_output_dir, 
                                 file_name):
+    
+
 
     command = f'whisper --model base --task translate --language {original_language} \
           {file_path} --output_dir {translate_output_dir}'
@@ -85,8 +88,10 @@ def transcript_file(file_input, file_name, file_extension,
 
     file = file_input.read()
 
+    slug_file_name = slugify(file_name)
+
     model = whisper.load_model(model_type)
-    
+
     # ЯЗЫК
     option = whisper.DecodingOptions(language=original_language,
                                      fp16=False)
@@ -114,7 +119,7 @@ def transcript_file(file_input, file_name, file_extension,
         
 
     if file_name != '':
-        file_name = file_name.replace('/', '')
+        file_name = slug_file_name.replace('/', '')
         with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
             f.write(file)
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
