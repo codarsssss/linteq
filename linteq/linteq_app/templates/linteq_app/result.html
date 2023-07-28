@@ -5,6 +5,7 @@
 {% block content %}
 {% if result.srt %}
 <div class="container">
+<div class="row"><h3>Распознанный текст</h3></div>
     <div class="row justify-content-center">
         <div class="m-5 w-auto">
             <a href="{% url 'linteq_app:download' file_path=result.srt %}"
@@ -35,8 +36,9 @@
 {% endif %}
 
 {% if result.translated_files.srt_tr %}
-<div>ПЕРЕВОД НА АНГЛ</div>
+
 <div class="container">
+<div class="row"><h3>Результат перевода</h3></div>
     <div class="row justify-content-center">
         <div class="m-5 w-auto">
             <a href="{% url 'linteq_app:download' file_path=result.translated_files.srt_tr %}"
