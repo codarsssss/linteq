@@ -8,7 +8,8 @@ from django.conf import settings
 import subprocess
 
 
-def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, user_folder_path, files_path, file_name):
+def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, 
+                     user_folder_path, files_path, file_name):
 
     user_folder_path = user_folder_path + '/output'
 
@@ -51,8 +52,10 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
     }
 
 
-def translate_speech_to_english(file_path, original_language):
-    command = f'whisper --model base --task translate --language {original_language} {file_path}'
+def translate_speech_to_english(file_path, original_language, translate_output_dir):
+
+    command = f'whisper --model base --task translate --language {original_language} \
+          {file_path} --output_dir {translate_output_dir}'
 
     try:
         result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
@@ -60,7 +63,7 @@ def translate_speech_to_english(file_path, original_language):
         return translated_text
     except subprocess.CalledProcessError as e:
         # Если возникла ошибка при выполнении команды Whisper
-        print(f'Ошибка при выполнении команды Whisper: {e.output.decode("utf-8")}, 111111111111111')
+        print(f'Ошибка при выполнении команды Whisper: {e.output.decode("utf-8")}')
         return None
 
 
@@ -76,7 +79,6 @@ def transcript_file(file_input, file_name, file_extension,
 
 
     file_data_model = FileData()
-
     file_data_model.delete_date = dt_now + timedelta(
         minutes=settings.STORAGE_TIME)
     
@@ -85,17 +87,17 @@ def transcript_file(file_input, file_name, file_extension,
 
     user_folder_path = f'media/user_requests/{dt_now}'
     file_data_model.path = user_folder_path
-
     file_data_model.save()
 
     clear_func()
     
     files_path = f'user_requests/{dt_now}'
 
-    if os.path.exists(user_folder_path):
-        print('папка есть')
-    else:
+    if not os.path.exists(user_folder_path):
         os.makedirs(user_folder_path)
+        translate_output_dir = user_folder_path + '/translate_output'
+        os.mkdir(translate_output_dir)
+        
 
     if file_name != '':
         file_name = file_name.replace('/', '')
@@ -103,11 +105,8 @@ def transcript_file(file_input, file_name, file_extension,
             f.write(file)
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
         if translate_checkBox:
-            translated_text = translate_speech_to_english(f"{user_folder_path}/{file_name}.{file_extension}", 
-                                                          original_language)
-
-        if translated_text:
-            print(f'Переведенный текст: {translated_text}')
+            translate_speech_to_english(f"{user_folder_path}/{file_name}.{file_extension}", 
+                                        original_language, translate_output_dir)
 
     else:
         file_name = str(file_input)[:-len(file_extension)-1]
@@ -115,11 +114,8 @@ def transcript_file(file_input, file_name, file_extension,
             f.write(file)
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
         if translate_checkBox:
-            translated_text = translate_speech_to_english(f"{user_folder_path}/{file_name}.{file_extension}",
-                                                          original_language)
-
-        if translated_text:
-            print(f'Переведенный текст: {translated_text}')
+            translate_speech_to_english(f"{user_folder_path}/{file_name}.{file_extension}",
+                                        original_language, translate_output_dir)
 
     output_dir = "/"
 
