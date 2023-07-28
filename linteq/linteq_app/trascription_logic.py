@@ -5,6 +5,7 @@ from whisper.utils import WriteSRT, ResultWriter, WriteVTT, WriteTXT, WriteJSON
 from .models import FileData
 from .clear_logic import clear_func
 from django.conf import settings
+import subprocess
 
 
 def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, user_folder_path, files_path, file_name):
@@ -50,9 +51,17 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
     }
 
 
-def translate_text(result, translate_language, model):
-    translate_result = model.translate(result)
-    print(translate_result)
+def translate_speech_to_english(file_path, original_language):
+    command = f'whisper --model base --task translate --language {original_language} {file_path}'
+
+    try:
+        result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+        translated_text = result.decode('utf-8').strip()
+        return translated_text
+    except subprocess.CalledProcessError as e:
+        # Если возникла ошибка при выполнении команды Whisper
+        print(f'Ошибка при выполнении команды Whisper: {e.output.decode("utf-8")}, 111111111111111')
+        return None
 
 
 def transcript_file(file_input, file_name, file_extension, 
@@ -65,13 +74,18 @@ def transcript_file(file_input, file_name, file_extension,
     option = whisper.DecodingOptions(language=original_language,
                                      fp16=False)
 
-    user_folder_path = f'media/user_requests/{dt_now}'
 
     file_data_model = FileData()
 
-    file_data_model.path = user_folder_path
     file_data_model.delete_date = dt_now + timedelta(
         minutes=settings.STORAGE_TIME)
+    
+    dt_now = str(dt_now).replace(' ', '_')
+    dt_now = str(dt_now).replace(':', '_')
+
+    user_folder_path = f'media/user_requests/{dt_now}'
+    file_data_model.path = user_folder_path
+
     file_data_model.save()
 
     clear_func()
@@ -88,22 +102,29 @@ def transcript_file(file_input, file_name, file_extension,
         with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
             f.write(file)
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
-        translate_text(result, translate_language, model)
+        if translate_checkBox:
+            translated_text = translate_speech_to_english(f"{user_folder_path}/{file_name}.{file_extension}", 
+                                                          original_language)
+
+        if translated_text:
+            print(f'Переведенный текст: {translated_text}')
+
     else:
         file_name = str(file_input)[:-len(file_extension)-1]
         with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
             f.write(file)
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
+        if translate_checkBox:
+            translated_text = translate_speech_to_english(f"{user_folder_path}/{file_name}.{file_extension}",
+                                                          original_language)
+
+        if translated_text:
+            print(f'Переведенный текст: {translated_text}')
 
     output_dir = "/"
 
     options = {"max_line_width": 80,
                 "max_line_count": 3,
                 "highlight_words": False}
-    
-    # Логика перевода текста
-    print(translate_checkBox)
-    # if translate_checkBox:
-    #     translate_text(result, translate_language)
 
     return write_some_files(result, options, file, output_dir, user_folder_path, files_path, file_name)
