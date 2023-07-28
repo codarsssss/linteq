@@ -9,7 +9,7 @@ import subprocess
 
 
 def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, 
-                     user_folder_path, files_path, file_name):
+                     user_folder_path, files_path, file_name, translate_checkBox):
 
     user_folder_path = user_folder_path + '/output'
 
@@ -42,17 +42,29 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
     with open(f"{user_folder_path}/{file_name}.json", "w") as file:
         json_writer.write_result(transcription_result, file, options)
 
+    if translate_checkBox:
+        translated_files = {
+            'srt_tr': f'{files_path}/translate_output/{file_name}.srt',
+            'vtt_tr': f'{files_path}/translate_output/{file_name}.vtt',
+            'txt_tr': f'{files_path}/translate_output/{file_name}.txt',
+            'json_tr': f'{files_path}/translate_output/{file_name}.json'
+        }
+    else:
+        translated_files = ''
+
     print('Done!')
 
     return {
         'srt': f'{files_path}/output/{file_name}.srt',
         'vtt': f'{files_path}/output/{file_name}.vtt',
         'txt': f'{files_path}/output/{file_name}.txt',
-        'json': f'{files_path}/output/{file_name}.json'
+        'json': f'{files_path}/output/{file_name}.json',
+        'translated_files': translated_files
     }
 
 
-def translate_speech_to_english(file_path, original_language, translate_output_dir):
+def translate_speech_to_english(file_path, original_language, translate_output_dir, 
+                                file_name):
 
     command = f'whisper --model base --task translate --language {original_language} \
           {file_path} --output_dir {translate_output_dir}'
@@ -74,6 +86,8 @@ def transcript_file(file_input, file_name, file_extension,
     file = file_input.read()
 
     model = whisper.load_model(model_type)
+    
+    # ЯЗЫК
     option = whisper.DecodingOptions(language=original_language,
                                      fp16=False)
 
@@ -106,7 +120,7 @@ def transcript_file(file_input, file_name, file_extension,
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
         if translate_checkBox:
             translate_speech_to_english(f"{user_folder_path}/{file_name}.{file_extension}", 
-                                        original_language, translate_output_dir)
+                                        original_language, translate_output_dir, file_name)
 
     else:
         file_name = str(file_input)[:-len(file_extension)-1]
@@ -115,7 +129,7 @@ def transcript_file(file_input, file_name, file_extension,
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
         if translate_checkBox:
             translate_speech_to_english(f"{user_folder_path}/{file_name}.{file_extension}",
-                                        original_language, translate_output_dir)
+                                        original_language, translate_output_dir, file_name)
 
     output_dir = "/"
 
@@ -123,4 +137,5 @@ def transcript_file(file_input, file_name, file_extension,
                 "max_line_count": 3,
                 "highlight_words": False}
 
-    return write_some_files(result, options, file, output_dir, user_folder_path, files_path, file_name)
+    return write_some_files(result, options, file, output_dir, user_folder_path, 
+                            files_path, file_name, translate_checkBox)
