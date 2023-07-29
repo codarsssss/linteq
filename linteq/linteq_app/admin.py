@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Consultation, FileData
+from django.contrib.auth.models import User, Group
 
 
 @admin.register(Consultation)
@@ -18,3 +19,8 @@ class FileDataAdmin(admin.ModelAdmin):
     search_fields = ['create_date', 'delete_date']
     ordering = ['create_date', 'delete_date']
     readonly_fields = ['path', 'create_date', 'delete_date']
+
+
+admin.site.unregister(User)
+
+admin.site.unregister(Group)

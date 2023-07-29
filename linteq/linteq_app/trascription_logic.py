@@ -52,8 +52,6 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
     else:
         translated_files = ''
 
-    print('Done!')
-
     return {
         'srt': f'{files_path}/output/{file_name}.srt',
         'vtt': f'{files_path}/output/{file_name}.vtt',
@@ -72,9 +70,7 @@ def translate_speech_to_english(file_path, original_language, translate_output_d
         result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
         translated_text = result.decode('utf-8').strip()
         return translated_text
-    except subprocess.CalledProcessError as e:
-        # Если возникла ошибка при выполнении команды Whisper
-        print(f'Ошибка при выполнении команды Whisper: {e.output.decode("utf-8")}')
+    except subprocess.CalledProcessError:
         return None
 
 
@@ -84,6 +80,9 @@ def transcript_file(file_input, file_name, file_extension,
     file = file_input.read()
 
     slug_file_name = slugify(file_name)
+
+    if slug_file_name is None:
+        slug_file_name = file_name
 
     model = whisper.load_model(model_type)
 
@@ -112,7 +111,7 @@ def transcript_file(file_input, file_name, file_extension,
         os.mkdir(translate_output_dir)
 
     if file_name != '':
-        file_name = slug_file_name
+        file_name = slug_file_name.replace('/', '')
         with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
             f.write(file)
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
