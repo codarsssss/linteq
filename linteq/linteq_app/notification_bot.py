@@ -1,9 +1,6 @@
 from aiogram import Bot
 from aiogram.dispatcher import Dispatcher
-
-
-TG_KEY = '6099136830:AAGxdrlY2MlJkxcmnsf91DIIY2MOM6rO4mM'
-CHAT_ID = '-676751431'
+from linteq.secret import TG_KEY, CHAT_ID
 
 
 bot = Bot(token=TG_KEY)
