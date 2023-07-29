@@ -1,3 +1,4 @@
+import asyncio
 import os
 from datetime import datetime
 from django.http import FileResponse, Http404
@@ -6,6 +7,7 @@ from .trascription_logic import transcript_file
 from .forms import FilePostForm, ConsultationForm
 from django.contrib import messages
 from django.conf import settings
+from .notification_bot import send_telegram_message
 
 
 def download_files(request, file_path):
@@ -19,6 +21,9 @@ def handle_form(request, form_class):
     form = form_class(request.POST)
     if form.is_valid():
         form.save()
+        asyncio.run(send_telegram_message(
+            f'Имя: {form.instance.name}\nПочта: {form.instance.email}\n'
+            f'Тема: {form.instance.subject}'))
         messages.success(request, 'Мы получили ваш запрос!')
         return True
     else:
