@@ -9,9 +9,8 @@ import subprocess
 from transliterate import slugify
 
 
-def write_some_files(transcription_result: dict, options: dict, file, output_dir: str, 
+def write_some_files(transcription_result: dict, options: dict, file, output_dir: str,
                      user_folder_path, files_path, file_name, translate_checkBox):
-
     user_folder_path = user_folder_path + '/output'
 
     os.mkdir(user_folder_path)
@@ -64,11 +63,8 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
     }
 
 
-def translate_speech_to_english(file_path, original_language, translate_output_dir, 
+def translate_speech_to_english(file_path, original_language, translate_output_dir,
                                 file_name):
-    
-
-
     command = f'whisper --model base --task translate --language {original_language} \
           {file_path} --output_dir {translate_output_dir}'
 
@@ -82,10 +78,9 @@ def translate_speech_to_english(file_path, original_language, translate_output_d
         return None
 
 
-def transcript_file(file_input, file_name, file_extension, 
+def transcript_file(file_input, file_name, file_extension,
                     model_type, dt_now, original_language,
                     translate_language, translate_checkBox):
-
     file = file_input.read()
 
     slug_file_name = slugify(file_name)
@@ -96,11 +91,10 @@ def transcript_file(file_input, file_name, file_extension,
     option = whisper.DecodingOptions(language=original_language,
                                      fp16=False)
 
-
     file_data_model = FileData()
     file_data_model.delete_date = dt_now + timedelta(
         minutes=settings.STORAGE_TIME)
-    
+
     dt_now = str(dt_now).replace(' ', '_')
     dt_now = str(dt_now).replace(':', '_')
 
@@ -109,26 +103,25 @@ def transcript_file(file_input, file_name, file_extension,
     file_data_model.save()
 
     clear_func()
-    
+
     files_path = f'user_requests/{dt_now}'
 
     if not os.path.exists(user_folder_path):
         os.makedirs(user_folder_path)
         translate_output_dir = user_folder_path + '/translate_output'
         os.mkdir(translate_output_dir)
-        
 
     if file_name != '':
-        file_name = slug_file_name.replace('/', '')
+        file_name = slug_file_name
         with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
             f.write(file)
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
         if translate_checkBox:
-            translate_speech_to_english(f"{user_folder_path}/{file_name}.{file_extension}", 
+            translate_speech_to_english(f"{user_folder_path}/{file_name}.{file_extension}",
                                         original_language, translate_output_dir, file_name)
 
     else:
-        file_name = str(file_input)[:-len(file_extension)-1]
+        file_name = str(file_input)[:-len(file_extension) - 1]
         with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
             f.write(file)
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
@@ -139,8 +132,8 @@ def transcript_file(file_input, file_name, file_extension,
     output_dir = "/"
 
     options = {"max_line_width": 80,
-                "max_line_count": 3,
-                "highlight_words": False}
+               "max_line_count": 3,
+               "highlight_words": False}
 
-    return write_some_files(result, options, file, output_dir, user_folder_path, 
+    return write_some_files(result, options, file, output_dir, user_folder_path,
                             files_path, file_name, translate_checkBox)
