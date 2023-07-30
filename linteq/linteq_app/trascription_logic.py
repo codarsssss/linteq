@@ -112,6 +112,7 @@ def transcript_file(file_input, file_name, file_extension,
 
     if file_name != '':
         file_name = slug_file_name.replace('/', '')
+        file_name = file_name.replace('*', '')
         with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
             f.write(file)
         result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
