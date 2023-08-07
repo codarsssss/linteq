@@ -2,14 +2,21 @@ import os
 from datetime import timedelta
 import whisper
 from whisper.utils import WriteSRT, ResultWriter, WriteVTT, WriteTXT, WriteJSON
+import openai
 from .models import FileData
 from .clear_logic import clear_func
 from django.conf import settings
 import subprocess
 from transliterate import slugify
+from linteq.secret import OPENAI_TOKEN
+import requests
+import json
 
 
-def write_some_files(transcription_result: dict, options: dict, file, output_dir: str,
+openai.api_key = OPENAI_TOKEN
+
+
+def write_some_files(transcription_result: dict, options: dict, output_dir: str,
                      user_folder_path, files_path, file_name, translate_checkBox):
     user_folder_path = user_folder_path + '/output'
 
@@ -61,8 +68,7 @@ def write_some_files(transcription_result: dict, options: dict, file, output_dir
     }
 
 
-def translate_speech_to_english(file_path, original_language, translate_output_dir,
-                                file_name):
+def translate_speech_to_english(file_path, original_language, translate_output_dir):
     command = f'whisper --model base --task translate --language {original_language} \
           {file_path} --output_dir {translate_output_dir}'
 
@@ -87,8 +93,10 @@ def transcript_file(file_input, file_name, file_extension,
     model = whisper.load_model(model_type)
 
     # ЯЗЫК
-    option = whisper.DecodingOptions(language=original_language,
-                                     fp16=False)
+    # option = whisper.DecodingOptions(language=original_language,
+    #                                  fp16=False)
+
+
 
     file_data_model = FileData()
     file_data_model.delete_date = dt_now + timedelta(
@@ -113,21 +121,26 @@ def transcript_file(file_input, file_name, file_extension,
     if file_name != '':
         file_name = slug_file_name.replace('/', '')
         file_name = file_name.replace('*', '')
-        with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
+        pth = f"{user_folder_path}/{file_name}.{file_extension}"
+        with open(pth, 'wb') as f:
             f.write(file)
-        result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
+        media_file = open(pth, "rb")
+        # result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
+        result = openai.Audio.transcribe(model="whisper-1", file=media_file, response_format='json')
         if translate_checkBox:
-            translate_speech_to_english(f"{user_folder_path}/{file_name}.{file_extension}",
-                                        original_language, translate_output_dir, file_name)
+            translate_speech_to_english(pth, original_language, translate_output_dir)
+
 
     else:
         file_name = str(file_input)[:-len(file_extension) - 1]
-        with open(f"{user_folder_path}/{file_name}.{file_extension}", 'wb') as f:
+        pth = f"{user_folder_path}/{file_name}.{file_extension}"
+        with open(pth, 'wb') as f:
             f.write(file)
-        result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
+        media_file = open(pth, "rb")
+        # result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
+        result = openai.Audio.transcribe(model="whisper-1", file=media_file, response_format='json')
         if translate_checkBox:
-            translate_speech_to_english(f"{user_folder_path}/{file_name}.{file_extension}",
-                                        original_language, translate_output_dir, file_name)
+            translate_speech_to_english(pth, original_language, translate_output_dir)
 
     output_dir = "/"
 
@@ -135,5 +148,7 @@ def transcript_file(file_input, file_name, file_extension,
                "max_line_count": 3,
                "highlight_words": False}
 
-    return write_some_files(result, options, file, output_dir, user_folder_path,
-                            files_path, file_name, translate_checkBox)
+    return write_some_files(result, options, output_dir, user_folder_path, files_path, file_name, translate_checkBox)
+
+# transcription_result: dict, options: dict, file, output_dir: str,
+#                      user_folder_path, files_path, file_name, translate_checkBox
