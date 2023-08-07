@@ -78,8 +78,9 @@ def translate_speech_to_english(file_path, original_language, translate_output_d
 
 
 def transcript_file(file_input, file_name, file_extension,
-                    model_type, dt_now, original_language,
-                    translate_language, translate_checkBox):
+                    dt_now, translate_language,
+                    translate_checkBox):
+    
     file = file_input.read()
 
     slug_file_name = slugify(file_name)
@@ -115,10 +116,11 @@ def transcript_file(file_input, file_name, file_extension,
         with open(pth, 'wb') as f:
             f.write(file)
         media_file = open(pth, "rb")
-        result = openai.Audio.transcribe(model="whisper-1", file=media_file, response_format='verbose_json',
-                                         metadata={"language": original_language})
+        result = openai.Audio.transcribe(model="whisper-1", file=media_file,
+                                        response_format='verbose_json')
         if translate_checkBox:
-            translate_speech_to_english(pth, original_language, translate_output_dir)
+            translate_speech_to_english(pth, result['language'].capitalize(), 
+                                        translate_output_dir)
 
 
     else:
@@ -127,10 +129,11 @@ def transcript_file(file_input, file_name, file_extension,
         with open(pth, 'wb') as f:
             f.write(file)
         media_file = open(pth, "rb")
-        result = openai.Audio.transcribe(model="whisper-1", file=media_file, response_format='verbose_json',
-                                         metadata={"language": original_language})
+        result = openai.Audio.transcribe(model="whisper-1", file=media_file, 
+                                        response_format='verbose_json')
         if translate_checkBox:
-            translate_speech_to_english(pth, original_language, translate_output_dir)
+            translate_speech_to_english(pth, result['language'].capitalize(), 
+                                        translate_output_dir)
 
     output_dir = "/"
 
