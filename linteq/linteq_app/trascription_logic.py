@@ -1,6 +1,5 @@
 import os
 from datetime import timedelta
-import whisper
 from whisper.utils import WriteSRT, ResultWriter, WriteVTT, WriteTXT, WriteJSON
 import openai
 from .models import FileData
@@ -9,8 +8,6 @@ from django.conf import settings
 import subprocess
 from transliterate import slugify
 from linteq.secret import OPENAI_TOKEN
-import requests
-import json
 
 
 openai.api_key = OPENAI_TOKEN
@@ -90,13 +87,6 @@ def transcript_file(file_input, file_name, file_extension,
     if slug_file_name is None:
         slug_file_name = file_name
 
-    model = whisper.load_model(model_type)
-
-    # ЯЗЫК
-    # option = whisper.DecodingOptions(language=original_language,
-    #                                  fp16=False)
-
-
 
     file_data_model = FileData()
     file_data_model.delete_date = dt_now + timedelta(
@@ -125,8 +115,8 @@ def transcript_file(file_input, file_name, file_extension,
         with open(pth, 'wb') as f:
             f.write(file)
         media_file = open(pth, "rb")
-        # result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
-        result = openai.Audio.transcribe(model="whisper-1", file=media_file, response_format='json')
+        result = openai.Audio.transcribe(model="whisper-1", file=media_file, response_format='verbose_json',
+                                         metadata={"language": original_language})
         if translate_checkBox:
             translate_speech_to_english(pth, original_language, translate_output_dir)
 
@@ -137,8 +127,8 @@ def transcript_file(file_input, file_name, file_extension,
         with open(pth, 'wb') as f:
             f.write(file)
         media_file = open(pth, "rb")
-        # result = model.transcribe(f"{user_folder_path}/{file_name}.{file_extension}")
-        result = openai.Audio.transcribe(model="whisper-1", file=media_file, response_format='json')
+        result = openai.Audio.transcribe(model="whisper-1", file=media_file, response_format='verbose_json',
+                                         metadata={"language": original_language})
         if translate_checkBox:
             translate_speech_to_english(pth, original_language, translate_output_dir)
 
@@ -147,8 +137,8 @@ def transcript_file(file_input, file_name, file_extension,
     options = {"max_line_width": 80,
                "max_line_count": 3,
                "highlight_words": False}
+    
+    print(dir(openai.Audio.transcribe))
 
-    return write_some_files(result, options, output_dir, user_folder_path, files_path, file_name, translate_checkBox)
-
-# transcription_result: dict, options: dict, file, output_dir: str,
-#                      user_folder_path, files_path, file_name, translate_checkBox
+    return write_some_files(result, options, output_dir, user_folder_path,
+                            files_path, file_name, translate_checkBox)
