@@ -137,8 +137,6 @@ def transcript_file(file_input, file_name, file_extension,
     options = {"max_line_width": 80,
                "max_line_count": 3,
                "highlight_words": False}
-    
-    print(dir(openai.Audio.transcribe))
 
     return write_some_files(result, options, output_dir, user_folder_path,
                             files_path, file_name, translate_checkBox)
