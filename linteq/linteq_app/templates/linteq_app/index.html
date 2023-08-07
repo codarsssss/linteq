@@ -4,46 +4,35 @@
 
 {% block content %}
     <section id="hero" class="hero">
-
         <div class="hero__content">
             <h2 class="hero__title">Делаем работу переводчиков проще!</h2>
-            <p class="hero__descr">Благодаря нашим интуитивно понятным и наполненным функциями инструментам, переводчики могут фокусироваться на том, в чем они действительно уникальны - в интерпретации и передаче смысла.</p>
+            <p class="hero__descr">Благодаря нашим интуитивно понятным и наполненным функциями инструментам, переводчики
+                могут фокусироваться на том, в чем они действительно уникальны - в интерпретации и передаче смысла.</p>
             <div>
                 <a href="{% url 'linteq_app:transcription' %}" class="btn-get-started scrollto go-to__system">Транскрибировать</a>
                 <a href="#services" class="btn-projects scrollto">Услуги</a>
             </div>
         </div>
-
     </section>
-
-
     <main id="main">
-
         <section id="about" class="about wow fadeInUp">
             <div class="about__container container">
                 <div class="row">
-
                     <div class="col-lg-6 content">
                         <h2 class="about__title">Заголовок (о нас)</h2>
                         <p class="about__descr">Описание (о нас)</p>
-
                         <ul class="about__list list-reset">
                             <li class="about__item">Сервис 1</li>
                             <li class="about__item">Сервис 2</li>
                             <li class="about__item">Сервис 3</li>
                         </ul>
-
                     </div>
-
                     <div class="col-lg-6 about-img">
-                        <img src="{% static 'linteq_app/img/hero.png'%}" class="about__img" alt="">
+                        <img src="{% static 'linteq_app/img/hero.png' %}" class="about__img" alt="">
                     </div>
-
                 </div>
-
             </div>
         </section>
-
         <section id="services" class="services">
             <div class="services__container container">
                 <div class="services__header-section">
@@ -51,9 +40,7 @@
                     <p class="services__descr">Текст (описание услуг)
                     </p>
                 </div>
-
                 <div class="row">
-
                     <div class="col-lg-6">
                         <div class="services__card wow fadeInLeft">
                             <div class="services__card-icon"><i class="fa fa-bar-chart"></i></div>
@@ -61,7 +48,6 @@
                             <p class="services__card-descr">Описание</p>
                         </div>
                     </div>
-
                     <div class="col-lg-6">
                         <div class="services__card wow fadeInRight">
                             <div class="services__card-icon"><i class="fa fa-picture-o"></i></div>
@@ -69,7 +55,6 @@
                             <p class="services__card-descr">Описание</p>
                         </div>
                     </div>
-
                     <div class="col-lg-6">
                         <div class="services__card wow fadeInLeft" data-wow-delay="0.2s">
                             <div class="services__card-icon"><i class="fa fa-shopping-bag"></i></div>
@@ -77,7 +62,6 @@
                             <p class="services__card-descr">Описание</p>
                         </div>
                     </div>
-
                     <div class="col-lg-6">
                         <div class="services__card wow fadeInRight" data-wow-delay="0.2s">
                             <div class="services__card-icon"><i class="fa fa-map"></i></div>
@@ -85,12 +69,9 @@
                             <p class="services__card-descr">Описание</p>
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </section>
-
         <section id="call-to-action" class="cta wow fadeInUp">
             <div class="ctan__container container">
                 <div class="row">
@@ -102,19 +83,15 @@
                         <a class="cta__btn cta-btn align-middle" href="#">Пусто</a>
                     </div>
                 </div>
-
             </div>
         </section>
-
         <section id="contact" class="contact wow fadeInUp">
             <div class="contact__container container">
                 <div class="contact__title-box section-header">
                     <h2 class="contact__title">Связаться с нами</h2>
                     <p class="contact__descr">пусто</p>
                 </div>
-
                 <div class="row contact__info contact-info">
-
                     <div class="col-md-4">
                         <div class="contact__adress contact__card-box contact-address">
                             <i class="ion-ios-location-outline"></i>
@@ -122,7 +99,6 @@
                             <address class="contact__info-descr">Пусто</address>
                         </div>
                     </div>
-
                     <div class="col-md-4">
                         <div class="contact__mob contact__card-box contact-phone">
                             <i class="ion-ios-telephone-outline"></i>
@@ -130,7 +106,6 @@
                             <p class="contact__info-descr"><a href="tel:+155895548855">+790000000</a></p>
                         </div>
                     </div>
-
                     <div class="col-md-4">
                         <div class="contact__email contact__card-box contact-email">
                             <i class="ion-ios-email-outline"></i>
@@ -138,41 +113,44 @@
                             <p class="contact__info-descr"><a href="mailto:info@example.com">??@mail.com</a></p>
                         </div>
                     </div>
-
                 </div>
             </div>
-
             <div class="container">
                 <div class="form">
                     <div id="sendmessage">Ваше сообщение отправлено. Спасибо! =)</div>
                     <div id="errormessage"></div>
-                    <form action="{% url 'linteq_app:index' %}" method="POST" role="form" class="contactForm" enctype="multipart/form-data" prefix="form" id="form">
+                    <form action="{% url 'linteq_app:index' %}" method="POST" role="form" class="contactForm"
+                          enctype="multipart/form-data" prefix="form" id="form">
                         {% csrf_token %}
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя" data-rule="minlen:4" data-msg="Не менее 4 символов" />
+                                <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя"
+                                       data-rule="minlen:4" data-msg="Не менее 4 символов"/>
                                 <div class="validation"></div>
                             </div>
                             <div class="form-group col-md-6">
-                                <input type="email" class="form-control" name="email" id="email" placeholder="Ваш Email" data-rule="email" data-msg="Неверный email" />
+                                <input type="email" class="form-control" name="email" id="email" placeholder="Ваш Email"
+                                       data-rule="email" data-msg="Неверный email"/>
                                 <div class="validation"></div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" name="subject" id="subject" placeholder="Тема обращения" data-rule="minlen:4" data-msg="Не менее 8 символов" />
+                            <input type="text" class="form-control" name="subject" id="subject"
+                                   placeholder="Тема обращения" data-rule="minlen:4" data-msg="Не менее 8 символов"/>
                             <div class="validation"></div>
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Опишите вопрос, который вас интересует" placeholder="Сообщение"></textarea>
+                            <textarea class="form-control" name="message" rows="5" data-rule="required"
+                                      data-msg="Опишите вопрос, который вас интересует"
+                                      placeholder="Сообщение"></textarea>
                             <div class="validation"></div>
                         </div>
-                        <div class="text-center"><button type="submit">Отправить</button></div>
+                        <div class="text-center">
+                            <button type="submit">Отправить</button>
+                        </div>
                     </form>
                 </div>
-
             </div>
         </section>
-
     </main>
-
 {% endblock %}

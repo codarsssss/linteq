@@ -4,141 +4,81 @@
 
 {% block content %}
 
-<body>
-
-<section>
-    <div class="sys__container container mt-4">
-        <h1 class="sys__title mb-4">Транскрибировать аудио/видео файл в текст</h1>
-        <form id="sys__conversion-form conversion-form" enctype="multipart/form-data" method="POST">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="recorder" class="sys__form-label form-label">Загрузить файл</label>
-                <input type="file" id="file" name="file" class="sys__form-control form-control"
-                       accept="audio/*, video/*" required>
-            </div>
-
-            <div class="alert alert-danger d-flex align-items-center justify-content-center align-content-center d-none"
-                 role="alert" id="er_message">
-                <svg class="me-3" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                     xmlns="http://www.w3.org/2000/svg%22%3E">
-                    <path d="M12 9V14M12 21.41H5.93999C2.46999 21.41 1.01999 18.93 2.69999 15.9L5.81999 10.28L8.75999 5C10.54 1.79 13.46 1.79 15.24 5L18.18 10.29L21.3 15.91C22.98 18.94 21.52 21.42 18.06 21.42H12V21.41Z"
-                          stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M11.995 17H12.004" stroke="black" stroke-width="2" stroke-linecap="round"
-                          stroke-linejoin="round"/>
-                </svg>
-                <div>
-                    Размер файла не должен превышать 1Гб!
-                </div>
-            </div>
-
-{#            <div class="input-style">#}
-{#                <div class="mb-3">#}
-{#                    <label for="model_type" class="sys__form-label form-label">Выбор модели</label>#}
-{#                    <select id="model_type" name="model_type" class="sys__form-select form-select">#}
-{#                        <option value="base">базовая</option>#}
-{#                        <option value="medium">средняя</option>#}
-{#                        <option value="large">большая</option>#}
-{#                    </select>#}
-{#                </div>#}
-{#            </div>#}
-
-{#            <div class="input-style">#}
-{#                <div class="mb-3">#}
-{#                    <label for="original_language" class="sys__form-label form-label">Язык оригинала</label>#}
-{#                    <select id="original_language" name="original_language" class="sys__form-select form-select">#}
-{#                        <option value="ru">Русский</option>#}
-{#                        <option value="en">Английский</option>#}
-{#                        <option value="es">Испанский</option>#}
-{#                        <option value="de">Немецкий</option>#}
-{#                        <option value="ja">Японский</option>#}
-{#                        <option value="pl">Польский</option>#}
-{#                        <option value="it">Итальянский</option>#}
-{#                        <option value="pt">Португальский</option>#}
-{#                        <option value="da">Датский</option>#}
-{#                        <option value="ca">Каталанский</option>#}
-{#                        <option value="fr">Французский</option>#}
-{#                        <option value="tr">Турецкий</option>#}
-{#                        <option value="sv">Шведский</option>#}
-{#                        <option value="uk">Украинский</option>#}
-{#                        <option value="ml">Малайский</option>#}
-{#                    </select>#}
-{#                </div>#}
-{#            </div>#}
-
-
-            <div class="input-style translate_checkBox">
-                <div class="sys__form-check mb-3 form-check">
-                    <input type="checkbox" id="translate_checkBox" name="translate_checkBox"
-                           class="sys__form-check-input form-check-input">
-                    <label for="translate_checkBox" class="sys__form-check-label form-check-label">Выполнить перевод</label>
-                </div>
-
+    <body>
+    <section>
+        <div class="sys__container container mt-4">
+            <h1 class="sys__title mb-4">Транскрибировать аудио/видео файл в текст</h1>
+            <form id="sys__conversion-form conversion-form" enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
                 <div class="mb-3">
-                    <label for="translate_language" class="sys__form-label form-label">Язык перевода</label>
-                    <select id="translate_language" name="translate_language" class="sys__form-select form-select">
-                        <option value="en">Английский</option>
-                        <option value="ru" disabled>Русский</option>
-                        <option value="es" disabled>Испанский</option>
-                        <option value="de" disabled>Немецкий</option>
-                        <option value="ja" disabled>Японский</option>
-                        <option value="pl" disabled>Польский</option>
-                        <option value="it" disabled>Итальянский</option>
-                        <option value="pt" disabled>Португальский</option>
-                        <option value="da" disabled>Датский</option>
-                        <option value="ca" disabled>Каталанский</option>
-                        <option value="fr" disabled>Французский</option>
-                        <option value="tr" disabled>Турецкий</option>
-                        <option value="sv" disabled>Шведский</option>
-                        <option value="uk" disabled>Украинский</option>
-                        <option value="ml" disabled>Малайский</option>
-                    </select>
+                    <label for="recorder" class="sys__form-label form-label">Загрузить файл</label>
+                    <input type="file" id="file" name="file" class="sys__form-control form-control"
+                           accept="audio/*, video/*" required>
                 </div>
-            </div>
-
-            <div class="mb-3">
-                <label for="file_name" class="sys__form-label form-label">Название файла</label>
-                <input type="text" id="file_name" name="file_name" class="sys__form-control form-control">
-            </div>
-
-            <div class="d-flex align-items-center mb-3">
-                <button type="submit" id="submit" class="btn sys__btn-primary btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                <div class="alert alert-danger d-flex align-items-center justify-content-center align-content-center d-none"
+                     role="alert" id="er_message">
+                    <svg class="me-3" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         xmlns="http://www.w3.org/2000/svg%22%3E">
+                        <path d="M12 9V14M12 21.41H5.93999C2.46999 21.41 1.01999 18.93 2.69999 15.9L5.81999 10.28L8.75999 5C10.54 1.79 13.46 1.79 15.24 5L18.18 10.29L21.3 15.91C22.98 18.94 21.52 21.42 18.06 21.42H12V21.41Z"
+                              stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M11.995 17H12.004" stroke="black" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                    <div>
+                        Размер файла не должен превышать 1Гб!
+                    </div>
+                </div>
+                <div class="input-style translate_checkBox">
+                    <div class="sys__form-check mb-3 form-check">
+                        <input type="checkbox" id="translate_checkBox" name="translate_checkBox"
+                               class="sys__form-check-input form-check-input">
+                        <label for="translate_checkBox" class="sys__form-check-label form-check-label">Выполнить
+                            перевод</label>
+                    </div>
+                    <div class="mb-3">
+                        <label for="translate_language" class="sys__form-label form-label">Язык перевода</label>
+                        <select id="translate_language" name="translate_language" class="sys__form-select form-select">
+                            <option value="en">Английский</option>
+                            <option value="ru" disabled>Русский</option>
+                            <option value="es" disabled>Испанский</option>
+                            <option value="de" disabled>Немецкий</option>
+                            <option value="ja" disabled>Японский</option>
+                            <option value="pl" disabled>Польский</option>
+                            <option value="it" disabled>Итальянский</option>
+                            <option value="pt" disabled>Португальский</option>
+                            <option value="da" disabled>Датский</option>
+                            <option value="ca" disabled>Каталанский</option>
+                            <option value="fr" disabled>Французский</option>
+                            <option value="tr" disabled>Турецкий</option>
+                            <option value="sv" disabled>Шведский</option>
+                            <option value="uk" disabled>Украинский</option>
+                            <option value="ml" disabled>Малайский</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="file_name" class="sys__form-label form-label">Название файла</label>
+                    <input type="text" id="file_name" name="file_name" class="sys__form-control form-control">
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <button type="submit" id="submit" class="btn sys__btn-primary btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop">
                     <span class="sys__spinner-border spinner-border spinner-border-sm d-none" id="spinner" role="status"
                           aria-hidden="true"></span>
-                    Транскрибировать
-                </button>
-            </div>
-        </form>
-
-    </div>
-
-
-    <div class="modal fade " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content bg-transparent border-0">
-                <img src="{% static 'linteq_app/img/preloader.svg' %}" alt="preload_icon">
+                        Транскрибировать
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="modal fade " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-transparent border-0">
+                    <img src="{% static 'linteq_app/img/preloader.svg' %}" alt="preload_icon">
+                </div>
             </div>
         </div>
-    </div>
-</section>
-
-{#    <div>#}
-{#        <div class="container">#}
-{#            <div class="row justify-content-center">#}
-{#                <div class="col-6">#}
-{#                    <div class="progress">#}
-{#                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"#}
-{#                             aria-valuenow="75"#}
-{#                             aria-valuemin="0" aria-valuemax="100" style="width: 75%"></div>#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-
-
-
-
-</body>
+    </section>
+    </body>
 
 {% endblock %}
