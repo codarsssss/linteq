@@ -17,6 +17,14 @@ def download_files(request, file_path):
     raise Http404('Такого файла не существует :(')
 
 
+def from_url_choice(request, endpoint:str):
+    
+    if settings.ALLOWED_HOSTS:
+        request.session['from_url'] = f'{settings.ALLOWED_HOSTS[0]}/{endpoint}'
+    else:
+        request.session['from_url'] = f'http://127.0.0.1:8000/{endpoint}'
+        
+        
 def handle_form(request, form_class):
     form = form_class(request.POST)
     if form.is_valid():
@@ -54,6 +62,9 @@ def transcription_page(request):
                                           datetime.now(),
                                           form_object['translate_language'],
                                           translate_checkBox=form_object['translate_checkBox'])
+        
+            from_url_choice(request, 'transcription')
+        
             return redirect('linteq_app:result')
         else:
             form = FilePostForm()
@@ -68,7 +79,8 @@ def transcription_page(request):
 def result_page(request):
     context = {
         'title': 'Linteq',
-        'result': request.session.get('result')
+        'result': request.session.get('result'),
+        'from_url': request.session.get('from_url')
     }
     return render(request, 'linteq_app/result.html', context=context)
 
@@ -79,7 +91,9 @@ def post_editing_page(request):
         if form.is_valid():
             form_object = form.cleaned_data
             request.session['result'] = 1
-            request.session['from_url'] = f'linteq_app:post_editing'
+            
+            from_url_choice(request, 'post_editing')
+            
             return redirect('linteq_app:result')
         else:
             form = FilePostEditingForm()
