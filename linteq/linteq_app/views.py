@@ -8,7 +8,7 @@ from .forms import FilePostForm, ConsultationForm, FilePostEditingForm
 from django.contrib import messages
 from django.conf import settings
 from .notification_bot import send_telegram_message
-
+from .post_editing_logic import read_table_file
 
 def download_files(request, file_path):
     file_full_path = os.path.join(settings.MEDIA_ROOT, file_path)
@@ -90,7 +90,7 @@ def post_editing_page(request):
         form = FilePostEditingForm(request.POST, request.FILES)
         if form.is_valid():
             form_object = form.cleaned_data
-            request.session['result'] = 1
+            request.session['result'] = read_table_file(form_object['file'])
             
             from_url_choice(request, 'post_editing')
             
