@@ -1,156 +1,176 @@
-{% extends 'linteq_app/base.html' %}
-{% load static %}
+{% extends 'linteq_app/base.html' %} {% load static %} {% block content %}
+<section id="hero" class="hero">
+
+    <div class="hero__content container">
+            <h2 class="hero__title">Ваш личный лингвистический помощник</h2>
+        <p class="hero__descr">Главные задачи Linteq - улучшить качество, упростить и ускорить процесс перевода текста на все языки мира.</p>
+        <div>
+            <a href="{% url 'linteq_app:transcription' %}" class="btn-get-started scrollto go-to__system">Транскрибировать</a>
+            <a href="#services" class="btn-projects scrollto">Услуги</a>
+        </div>
+    </div>
+
+</section>
 
 
-{% block content %}
-    <section id="hero" class="hero">
-        <div class="hero__content">
-            <h2 class="hero__title">Делаем работу переводчиков проще!</h2>
-            <p class="hero__descr">Благодаря нашим интуитивно понятным и наполненным функциями инструментам, переводчики
-                могут фокусироваться на том, в чем они действительно уникальны - в интерпретации и передаче смысла.</p>
-            <div>
-                <a href="{% url 'linteq_app:transcription' %}" class="btn-get-started scrollto go-to__system">Транскрибировать</a>
-                <a href="#services" class="btn-projects scrollto">Услуги</a>
+<main id="main">
+
+    <section id="about" class="about wow fadeInUp">
+        <div class="about__container container">
+            <div class="row">
+
+                <div class="col-lg-6 content">
+                    <h2 class="about__title">Linteq запускает систему распознавания речи на основе ИИ</h2>
+                    <p class="about__descr">Инструмент подойдет всем, кому нужно расшифровать речь. Способы применения могут быть совершенно разными:</p>
+
+                    <ul class="about__list list-reset">
+                        <li class="about__item"><i class="fa ion-checkmark"></i>Поступил заказ на транскрибирование и перевод аудиовизуального контента — получили текст с уже расставленными таймкодами;</li>
+                        <li class="about__item"><i class="fa ion-checkmark"></i>Провели рабочий созвон — получили текст, который поможет погрузиться в контекст, сделать фоллоу-ап и не упустить детали;</li>
+                        <li class="about__item"><i class="fa ion-checkmark"></i>Провели собеседование — сразу получили готовый текстовый драфт;</li>
+                        <li class="about__item"><i class="fa ion-checkmark"></i>Выступили с докладом на конференции — оформили в виде статьи минимальными усилиями;</li>
+                        <li class="about__item"><i class="fa ion-checkmark"></i>Записали лекцию или презентацию проекта — получили готовую текстовую версию.</li>
+                    </ul>
+
+                </div>
+
+                <div class="col-lg-6 about-img flex">
+<!--                    <img src="{% static 'linteq_app/img/hero.png'%}" class="about__img" alt="">-->
+                </div>
+
             </div>
+
         </div>
     </section>
-    <main id="main">
-        <section id="about" class="about wow fadeInUp">
-            <div class="about__container container">
-                <div class="row">
-                    <div class="col-lg-6 content">
-                        <h2 class="about__title">Заголовок (о нас)</h2>
-                        <p class="about__descr">Описание (о нас)</p>
-                        <ul class="about__list list-reset">
-                            <li class="about__item">Сервис 1</li>
-                            <li class="about__item">Сервис 2</li>
-                            <li class="about__item">Сервис 3</li>
-                        </ul>
+
+    <section id="services" class="services">
+        <div class="services__container container">
+            <div class="services__header-section">
+                <h2 class="services__title">Услуги</h2>
+                <p class="services__descr">Быстро и качественно окажем любую лингвистическую услугу</p>
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-6 services__card-box">
+                    <div class="services__card wow fadeInLeft">
+                        <div class="services__card-icon"><i class="fa fa-bar-chart"></i></div>
+                        <h4 class="services__card-title"><a href="{% url 'linteq_app:transcription' %}">Распознавание аудио/видео в текст</a></h4>
+                        <p class="services__card-descr">Наш инструмент поможет вам качественно распознать аудио или видео файлы в текст.</p>
                     </div>
-                    <div class="col-lg-6 about-img">
-                        <img src="{% static 'linteq_app/img/hero.png' %}" class="about__img" alt="">
+                </div>
+
+                <div class="col-lg-6 services__card-box">
+                    <div class="services__card wow fadeInRight">
+                        <div class="services__card-icon"><i class="fa fa-picture-o"></i></div>
+                        <h4 class="services__card-title"><a href="#contact">Письменный перевод</a></h4>
+                        <p class="services__card-descr">Выполним перевод любой сложности профессиональной командой.</p>
                     </div>
+                </div>
+
+                <div class="col-lg-6 services__card-box">
+                    <div class="services__card wow fadeInLeft" data-wow-delay="0.2s">
+                        <div class="services__card-icon"><i class="fa fa-shopping-bag"></i></div>
+                        <h4 class="services__card-title"><a href="#contact">Импорт субтитров в видео</a></h4>
+                        <p class="services__card-descr">Используем специальные программы. Учтем все ваши пожелания к выполнению задачи.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 services__card-box">
+                    <div class="services__card wow fadeInRight" data-wow-delay="0.2s">
+                        <div class="services__card-icon"><i class="fa fa-map"></i></div>
+                        <h4 class="services__card-title"><a href="#contact">Локализация сайтов</a></h4>
+                        <p class="services__card-descr">Выполняем парсинг сайтов, макетов для перевода в любой языковой паре.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <section id="call-to-action" class="cta wow fadeInUp">
+        <div class="ctan__container container">
+            <div class="row">
+                <div class="col-lg-9 text-center text-lg-left">
+                    <h3 class="cta__title cta-title">Новый инструмент уже готов к работе!</h3>
+                    <p class="cta__text cta-text">Инструмент умеет распознавать аудио и видео в текст с или без субтитр, а также выполнять перевод.</p>
+                </div>
+                <div class="col-lg-3 cta__btn-box cta-btn-container text-center">
+                    <a class="cta__btn cta-btn align-middle" href="{% url 'linteq_app:transcription' %}">Транскрибировать</a>
                 </div>
             </div>
-        </section>
-        <section id="services" class="services">
-            <div class="services__container container">
-                <div class="services__header-section">
-                    <h2 class="services__title">Услуги</h2>
-                    <p class="services__descr">Текст (описание услуг)
-                    </p>
-                </div>
-                <div class="row">
-                    <div class="col-lg-6">
-                        <div class="services__card wow fadeInLeft">
-                            <div class="services__card-icon"><i class="fa fa-bar-chart"></i></div>
-                            <h4 class="services__card-title"><a href="">Название усл.</a></h4>
-                            <p class="services__card-descr">Описание</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="services__card wow fadeInRight">
-                            <div class="services__card-icon"><i class="fa fa-picture-o"></i></div>
-                            <h4 class="services__card-title"><a href="">Название усл.</a></h4>
-                            <p class="services__card-descr">Описание</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="services__card wow fadeInLeft" data-wow-delay="0.2s">
-                            <div class="services__card-icon"><i class="fa fa-shopping-bag"></i></div>
-                            <h4 class="services__card-title"><a href="">Название усл.</a></h4>
-                            <p class="services__card-descr">Описание</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="services__card wow fadeInRight" data-wow-delay="0.2s">
-                            <div class="services__card-icon"><i class="fa fa-map"></i></div>
-                            <h4 class="services__card-title"><a href="">Название усл.</a></h4>
-                            <p class="services__card-descr">Описание</p>
-                        </div>
-                    </div>
-                </div>
+
+        </div>
+    </section>
+
+    <section id="contact" class="contact wow fadeInUp">
+        <div class="contact__container container">
+            <div class="contact__title-box section-header">
+                <h2 class="contact__title">Связаться с нами</h2>
+                <p class="contact__descr">Хотите сделать заказ или у вас остались вопросы по поводу услуги? Заполните форму для получения обратной связи и наши специалисты проконсультируют вас!</p>
             </div>
-        </section>
-        <section id="call-to-action" class="cta wow fadeInUp">
-            <div class="ctan__container container">
-                <div class="row">
-                    <div class="col-lg-9 text-center text-lg-left">
-                        <h3 class="cta__title cta-title">Пусто</h3>
-                        <p class="cta__text cta-text">Пусто</p>
-                    </div>
-                    <div class="col-lg-3 cta__btn-box cta-btn-container text-center">
-                        <a class="cta__btn cta-btn align-middle" href="#">Пусто</a>
+
+            <div class="row contact__info contact-info">
+
+                <div class="col-md-4">
+                    <div class="contact__adress contact__card-box contact-address">
+                        <i class="ion-ios-location-outline"></i>
+                        <h3 class="contact__heading">Адрес</h3>
+                        <address class="contact__info-descr">---</address>
                     </div>
                 </div>
+
+                <div class="col-md-4">
+                    <div class="contact__mob contact__card-box contact-phone">
+                        <i class="ion-ios-telephone-outline"></i>
+                        <h3 class="contact__heading">Номер</h3>
+                        <p class="contact__info-descr"><a href="tel:+79816912289">+7 (981) 691-22-89</a></p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="contact__email contact__card-box contact-email">
+                        <i class="ion-ios-email-outline"></i>
+                        <h3 class="contact__heading">Email</h3>
+                        <p class="contact__info-descr"><a href="mailto:linteq-contact@mail.ru">linteq-contact@mail.ru</a></p>
+                    </div>
+                </div>
+
             </div>
-        </section>
-        <section id="contact" class="contact wow fadeInUp">
-            <div class="contact__container container">
-                <div class="contact__title-box section-header">
-                    <h2 class="contact__title">Связаться с нами</h2>
-                    <p class="contact__descr">пусто</p>
-                </div>
-                <div class="row contact__info contact-info">
-                    <div class="col-md-4">
-                        <div class="contact__adress contact__card-box contact-address">
-                            <i class="ion-ios-location-outline"></i>
-                            <h3 class="contact__heading">Адрес</h3>
-                            <address class="contact__info-descr">Пусто</address>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="contact__mob contact__card-box contact-phone">
-                            <i class="ion-ios-telephone-outline"></i>
-                            <h3 class="contact__heading">Номер</h3>
-                            <p class="contact__info-descr"><a href="tel:+155895548855">+790000000</a></p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="contact__email contact__card-box contact-email">
-                            <i class="ion-ios-email-outline"></i>
-                            <h3 class="contact__heading">Email</h3>
-                            <p class="contact__info-descr"><a href="mailto:info@example.com">??@mail.com</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="form">
-                    <div id="sendmessage">Ваше сообщение отправлено. Спасибо! =)</div>
-                    <div id="errormessage"></div>
-                    <form action="{% url 'linteq_app:index' %}" method="POST" role="form" class="contactForm"
-                          enctype="multipart/form-data" prefix="form" id="form">
-                        {% csrf_token %}
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя"
-                                       data-rule="minlen:4" data-msg="Не менее 4 символов"/>
-                                <div class="validation"></div>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <input type="email" class="form-control" name="email" id="email" placeholder="Ваш Email"
-                                       data-rule="email" data-msg="Неверный email"/>
-                                <div class="validation"></div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" class="form-control" name="subject" id="subject"
-                                   placeholder="Тема обращения" data-rule="minlen:4" data-msg="Не менее 8 символов"/>
+        </div>
+
+        <div class="container">
+            <div class="form">
+                <div id="sendmessage">Ваше сообщение отправлено. Спасибо! =)</div>
+                <div id="errormessage"></div>
+                <form action="{% url 'linteq_app:index' %}" method="POST" role="form" class="contactForm" enctype="multipart/form-data" prefix="form" id="form">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <input type="text" name="name" class="form-control" id="name" placeholder="Ваше имя" data-rule="minlen:4" data-msg="Не менее 4 символов" />
                             <div class="validation"></div>
                         </div>
-                        <div class="form-group">
-                            <textarea class="form-control" name="message" rows="5" data-rule="required"
-                                      data-msg="Опишите вопрос, который вас интересует"
-                                      placeholder="Сообщение"></textarea>
+                        <div class="form-group col-md-6">
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Ваш Email" data-rule="email" data-msg="Неверный email" />
                             <div class="validation"></div>
                         </div>
-                        <div class="text-center">
-                            <button type="submit">Отправить</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="subject" id="subject" placeholder="Тема обращения" data-rule="minlen:4" data-msg="Не менее 8 символов" />
+                        <div class="validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Опишите вопрос, который вас интересует" placeholder="Сообщение"></textarea>
+                        <div class="validation"></div>
+                    </div>
+                    <div class="text-center"><button type="submit">Отправить</button></div>
+                </form>
             </div>
-        </section>
-    </main>
+
+        </div>
+    </section>
+
+</main>
+
+
 {% endblock %}

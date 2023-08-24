@@ -29,23 +29,21 @@
 
     <!-- Main Stylesheet File -->
     <link rel="stylesheet" href="{% static 'linteq_app/css/style.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 </head>
 
-<body id="body">
+<body id="body" class="body">
 
     <section id="topbar" class="topbar d-none d-lg-block">
         <div class="topbar__container container clearfix">
             <div class="topbar__contact-info float-left">
-                <i class="fa fa-envelope-o"></i> <a href="mailto:contact@example.com" class="topbar__link">mail@mail.ru</a>
-                <i class="fa fa-phone"></i> <a href="tel:+79111111111" class="topbar__link">+7 (900) 000-00-00</a>
+                <i class="fa fa-envelope-o"></i> <a href="mailto:linteq-contact@mail.ru" class="topbar__link">linteq-contact@mail.ru</a>
+                <i class="fa fa-phone"></i> <a href="tel:+79816912289" class="topbar__link">+7 (981) 691-22-89</a>
             </div>
             <div class="topbar__social-links float-right">
-                <a href="#" class="topbar__link twitter"><i class="fa fa-vk"></i></a>
-                <a href="#" class="topbar__link facebook"><i class="fa fa-telegram"></i></a>
-                <a href="#" class="topbar__link linkedin"><i class="fa fa-youtube"></i></a>
+                <a href="#" class="topbar__link vk"><i class="fa fa-vk"></i></a>
+                <a href="https://t.me/linteq" class="topbar__link tg"><i class="fa fa-telegram"></i></a>
+                <a href="#" class="topbar__link youtube"><i class="fa fa-youtube"></i></a>
             </div>
         </div>
     </section>
@@ -72,16 +70,16 @@
                         <a href="#">Продукты</a>
                         <ul class="list-reset">
                             <li class="list__item-dropped list-reset">
-                                <a href="#">Аудио в текст</a>
+                                <a href="{% url 'linteq_app:transcription' %}">Распознавание аудио/видео в текст</a>
                             </li>
                             <li class="list__item-dropped">
-                                <a href="#">Видео в текст</a>
+                                <a href="#contact">Импорт субтитров в видео</a>
                             </li>
                             <li class="list__item-dropped">
-                                <a href="#">Транскрибирование</a>
+                                <a href="#contact">Локализация сайтов</a>
                             </li>
                             <li class="list__item-dropped">
-                                <a href="#">Субтитрирование</a>
+                                <a href="#contact">Письменный перевод</a>
                             </li>
                         </ul>
                     </li>
@@ -100,34 +98,33 @@
     <footer>
 
         <div class="container footercontainer">
-            <div class="footertop">
+            <div class="footertop row">
                 <div class="boxfooter">
                     <div class="logo">
-                        <img src="img/logo.png" alt="Логотип">
+                        <a href="{% url 'linteq_app:index'%}"><img src="{% static 'linteq_app/img/logo.png'%}" alt="Логотип"></a>
                     </div>
                     <div class="terms">
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto facilis quia sequi porro quod, quo assumenda perspiciatis. Enim excepturi error minus saepe? Blanditiis explicabo, corrupti natus ullam sed labore nisi.</p>
+                        <a href="#" class="topbar__link vk footer__link"><i class="fa fa-vk"></i></a>
+                        <a href="https://t.me/linteq" class="topbar__link tg footer__link"><i class="fa fa-telegram"></i></a>
+                        <a href="#" class="topbar__link youtube footer__link"><i class="fa fa-youtube"></i></a>
                     </div>
                 </div>
-                <div class="boxfooter">
-                    <h2>Пусто</h2>
-                    <a href="https://www.google.xn--com%22%3E-82hkynm/</a>
-                    <a href="#">Пусто</a>
-                    <a href="#">Пусто</a>
-                    <a href="#">Пусто</a>
+                <div class="boxfooter boxfooter__services">
+                    <h2>Услуги</h2>
+                    <a href="{% url 'linteq_app:transcription' %}">Транскрибирование</a>
+                    <a href="#contact">Письменный перевод</a>
+                    <a href="#contact">Локализация сайтов</a>
+                    <a href="#contact">Субтитрирование</a>
                 </div>
 
-                <div class="boxfooter">
-                    <h2>Пусто</h2>
-                    <a href="#">Пусто</a>
-                    <a href="#">Пусто</a>
-                    <a href="#">Пусто</a>
-                    <a href="#">Пусто</a>
+                <div class="boxfooter boxfooter__about-us">
+                    <h2>О нас</h2>
+                    <a href="{% url 'linteq_app:transcription' %}">Инструмент для распознавания</a>
                 </div>
             </div>
             <div class="footerbot">
                 <div class="box__copyright">
-                    <p>Пусто © 2023 <b>Linteq</b></p>
+                    <p>© 2023 <b>Linteq</b></p>
                 </div>
             </div>
         </div>
@@ -146,19 +143,17 @@
     <script src="{% static 'linteq_app/lib/superfish/superfish.min.js' %}"></script>
     <script src="{% static 'linteq_app/lib/wow/wow.min.js' %}"></script>
     <script src="{% static 'linteq_app/lib/owlcarousel/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'linteq_app/lib/magnific-popup/magnific-popup.min.js' %}"></script>
+<!--    <script src="{% static 'linteq_app/lib/magnific-popup/magnific-popup.min.js' %}"></script>-->
     <script src="{% static 'linteq_app/lib/sticky/sticky.js' %}"></script>
     <!-- Contact Form JavaScript File -->
-{#    <script src="{% static 'linteq_app/contactform/contactform.js' %}"></script>#}
+    <script src="{% static 'linteq_app/contactform/contactform.js' %}"></script>
 
     <!-- Template Main Javascript File -->
     <script src="{% static 'linteq_app/js/main.js'%}"></script>
 
-    <script src="{% static 'linteq_app/js/main.js'%}"></script>
-
     <!-- Наш скрипт -->
     <script src="{% static 'linteq_app/js/limit_file_size_button_logic.js'%}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>-->
 
 
 </body>
