@@ -14,6 +14,8 @@ openai.api_key = OPENAI_TOKEN
 
 def write_some_files(transcription_result: dict, options: dict, output_dir: str,
                      user_folder_path, files_path, file_name, translate_checkBox, translate_result):
+
+    writers = {'srt': WriteSRT, 'vtt': WriteVTT, 'txt': WriteTXT, 'json': WriteJSON}
     
     user_folder_path = user_folder_path + '/output'
     
@@ -23,71 +25,26 @@ def write_some_files(transcription_result: dict, options: dict, output_dir: str,
 
     # Создание srt
 
-    srt_writer = WriteSRT(result_writer)
-    with open(f"{user_folder_path}/{file_name}.srt", "w") as file:
-        srt_writer.write_result(transcription_result, file, options)
+    for ext, writer in writers.items():
+        writer = writer(result_writer)
+        with open(f"{user_folder_path}/{file_name}.{ext}", "w") as file:
+            writer.write_result(transcription_result, file, options)
 
-    # Создание vtt
-
-    vtt_writer = WriteVTT(result_writer)
-    with open(f"{user_folder_path}/{file_name}.vtt", "w") as file:
-        vtt_writer.write_result(transcription_result, file, options)
-
-    # Создание txt
-
-    txt_writer = WriteTXT(result_writer)
-    with open(f"{user_folder_path}/{file_name}.txt", "w") as file:
-        txt_writer.write_result(transcription_result, file, options)
-
-    # Создание json
-
-    json_writer = WriteJSON(result_writer)
-    with open(f"{user_folder_path}/{file_name}.json", "w") as file:
-        json_writer.write_result(transcription_result, file, options)
 
     if translate_checkBox:
-        
-        # Создание srt (Перевод)
-        
-        srt_writer = WriteSRT(result_writer)
-        with open(f"media/{files_path}/translate_output/{file_name}.srt", "w") as file:
-            srt_writer.write_result(translate_result, file, options)
+        for ext, writer in writers.items():
+            writer = writer(result_writer)
+            with open(f"media/{files_path}/translate_output/{file_name}.{ext}", "w") as file:
+                writer.write_result(translate_result, file, options)
 
-        # Создание vtt (Перевод)
-
-        vtt_writer = WriteVTT(result_writer)
-        with open(f"media/{files_path}/translate_output/{file_name}.vtt", "w") as file:
-            vtt_writer.write_result(translate_result, file, options)
-
-        # Создание txt (Перевод)
-
-        txt_writer = WriteTXT(result_writer)
-        with open(f"media/{files_path}/translate_output/{file_name}.txt", "w") as file:
-            txt_writer.write_result(translate_result, file, options)
-
-        # Создание json (Перевод)
- 
-        json_writer = WriteJSON(result_writer)
-        with open(f"media/{files_path}/translate_output/{file_name}.json", "w") as file:
-            json_writer.write_result(translate_result, file, options)
-        
-        translated_files = {
-            'srt_tr': f'{files_path}/translate_output/{file_name}.srt',
-            'vtt_tr': f'{files_path}/translate_output/{file_name}.vtt',
-            'txt_tr': f'{files_path}/translate_output/{file_name}.txt',
-            'json_tr': f'{files_path}/translate_output/{file_name}.json'
-        }
+        translated_files = {f'{ext}' + '_tr': f'{files_path}/translate_output/{file_name}.{ext}' for ext, _ in writers.items()}
         
     else:
         translated_files = ''
 
-    return {
-        'srt': f'{files_path}/output/{file_name}.srt',
-        'vtt': f'{files_path}/output/{file_name}.vtt',
-        'txt': f'{files_path}/output/{file_name}.txt',
-        'json': f'{files_path}/output/{file_name}.json',
-        'translated_files': translated_files
-    }
+    transcripted_files = {f'{ext}': f'{files_path}/output/{file_name}.{ext}' for ext, _ in writers.items()}
+    transcripted_files['translated_files'] = translated_files
+    return transcripted_files
 
 
 def translate_speech_to_english(file_path):
