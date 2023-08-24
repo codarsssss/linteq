@@ -26,6 +26,7 @@ multidict==6.0.4
 networkx==3.1
 numba==0.57.1
 numpy==1.24.4
+openai==0.27.9
 openai-whisper @ git+https://github.com/openai/whisper.git@b91c907694f96a3fb9da03d4bbdc83fbcd3a40a4
 pytz==2023.3
 regex==2023.6.3
