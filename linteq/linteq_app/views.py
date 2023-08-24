@@ -4,7 +4,7 @@ from datetime import datetime
 from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect
 from .trascription_logic import transcript_file
-from .forms import FilePostForm, ConsultationForm
+from .forms import FilePostForm, ConsultationForm, FilePostEditingForm
 from django.contrib import messages
 from django.conf import settings
 from .notification_bot import send_telegram_message
@@ -71,3 +71,21 @@ def result_page(request):
         'result': request.session.get('result')
     }
     return render(request, 'linteq_app/result.html', context=context)
+
+
+def post_editing_page(request):
+    if request.method == "POST" and request.FILES:
+        form = FilePostEditingForm(request.POST, request.FILES)
+        if form.is_valid():
+            form_object = form.cleaned_data
+            request.session['result'] = 1
+            request.session['from_url'] = f'linteq_app:post_editing'
+            return redirect('linteq_app:result')
+        else:
+            form = FilePostEditingForm()
+
+    context = {
+        'title': 'Постредактирование машинного перевода'
+    }
+
+    return render(request, 'linteq_app/post-editing.html', context=context)

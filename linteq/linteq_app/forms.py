@@ -15,3 +15,7 @@ class FilePostForm(forms.Form):
     translate_checkBox = forms.CharField(required=False)
     translate_language = forms.CharField(required=False)
     file_name = forms.CharField(required=False)
+
+
+class FilePostEditingForm(forms.Form):
+    file = forms.FileField()

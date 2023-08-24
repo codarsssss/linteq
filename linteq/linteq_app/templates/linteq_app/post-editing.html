@@ -1,0 +1,51 @@
+{% extends 'linteq_app/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+    <body>
+    <section>
+        <div class="sys__container container mt-4">
+            <h1 class="sys__title mb-4">Транскрибировать аудио/видео файл в текст</h1>
+            <form id="sys__conversion-form conversion-form" enctype="multipart/form-data" method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="recorder" class="sys__form-label form-label">Загрузить файл</label>
+                    <input type="file" id="file" name="file" class="sys__form-control form-control"
+                           accept="audio/*, video/*" required>
+                </div>
+                <div class="d-none alert alert-danger flex align-items-center justify-content-center align-content-center"
+                     role="alert" id="er_message">
+                    <svg class="me-3" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                         xmlns="http://www.w3.org/2000/svg%22%3E">
+                        <path d="M12 9V14M12 21.41H5.93999C2.46999 21.41 1.01999 18.93 2.69999 15.9L5.81999 10.28L8.75999 5C10.54 1.79 13.46 1.79 15.24 5L18.18 10.29L21.3 15.91C22.98 18.94 21.52 21.42 18.06 21.42H12V21.41Z"
+                              stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M11.995 17H12.004" stroke="black" stroke-width="2" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                    <div>
+                        Размер файла не должен превышать 25МБ!
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <button type="submit" id="submit" class="btn sys__btn-primary btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdrop">
+                    <span class="sys__spinner-border spinner-border spinner-border-sm d-none" id="spinner" role="status"
+                          aria-hidden="true"></span>
+                        Транскрибировать
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="modal fade " id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-transparent border-0">
+                    <img src="{% static 'linteq_app/img/preloader.svg' %}" alt="preload_icon">
+                </div>
+            </div>
+        </div>
+    </section>
+    </body>
+{% endblock %}
