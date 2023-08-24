@@ -143,3 +143,4 @@ def transcript_file(file_input, file_name, file_extension,
 
     return write_some_files(result, options, output_dir, user_folder_path,
                             files_path, file_name, translate_checkBox)
+
