@@ -5,7 +5,6 @@ import openai
 from .models import FileData
 from .clear_logic import clear_func
 from django.conf import settings
-import subprocess
 from transliterate import slugify
 from linteq.secret import OPENAI_TOKEN
 
@@ -14,9 +13,10 @@ openai.api_key = OPENAI_TOKEN
 
 
 def write_some_files(transcription_result: dict, options: dict, output_dir: str,
-                     user_folder_path, files_path, file_name, translate_checkBox):
+                     user_folder_path, files_path, file_name, translate_checkBox, translate_result):
+    
     user_folder_path = user_folder_path + '/output'
-
+    
     os.mkdir(user_folder_path)
 
     result_writer = ResultWriter(output_dir)
@@ -25,7 +25,6 @@ def write_some_files(transcription_result: dict, options: dict, output_dir: str,
 
     srt_writer = WriteSRT(result_writer)
     with open(f"{user_folder_path}/{file_name}.srt", "w") as file:
-
         srt_writer.write_result(transcription_result, file, options)
 
     # Создание vtt
@@ -47,12 +46,38 @@ def write_some_files(transcription_result: dict, options: dict, output_dir: str,
         json_writer.write_result(transcription_result, file, options)
 
     if translate_checkBox:
+        
+        # Создание srt (Перевод)
+        
+        srt_writer = WriteSRT(result_writer)
+        with open(f"media/{files_path}/translate_output/{file_name}.srt", "w") as file:
+            srt_writer.write_result(translate_result, file, options)
+
+        # Создание vtt (Перевод)
+
+        vtt_writer = WriteVTT(result_writer)
+        with open(f"media/{files_path}/translate_output/{file_name}.vtt", "w") as file:
+            vtt_writer.write_result(translate_result, file, options)
+
+        # Создание txt (Перевод)
+
+        txt_writer = WriteTXT(result_writer)
+        with open(f"media/{files_path}/translate_output/{file_name}.txt", "w") as file:
+            txt_writer.write_result(translate_result, file, options)
+
+        # Создание json (Перевод)
+ 
+        json_writer = WriteJSON(result_writer)
+        with open(f"media/{files_path}/translate_output/{file_name}.json", "w") as file:
+            json_writer.write_result(translate_result, file, options)
+        
         translated_files = {
             'srt_tr': f'{files_path}/translate_output/{file_name}.srt',
             'vtt_tr': f'{files_path}/translate_output/{file_name}.vtt',
             'txt_tr': f'{files_path}/translate_output/{file_name}.txt',
             'json_tr': f'{files_path}/translate_output/{file_name}.json'
         }
+        
     else:
         translated_files = ''
 
@@ -65,21 +90,22 @@ def write_some_files(transcription_result: dict, options: dict, output_dir: str,
     }
 
 
-def translate_speech_to_english(file_path, original_language, translate_output_dir):
-    command = f'whisper --model base --task translate --language {original_language} \
-          {file_path} --output_dir {translate_output_dir}'
-
-    try:
-        result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
-        translated_text = result.decode('utf-8').strip()
-        return translated_text
-    except subprocess.CalledProcessError:
-        return None
+def translate_speech_to_english(file_path):
+    audio_file = open(file_path, "rb")
+    transcript = openai.Audio.translate("whisper-1", audio_file,
+                                        response_format='verbose_json')
+    return transcript
 
 
 def transcript_file(file_input, file_name, file_extension,
                     dt_now, translate_language,
                     translate_checkBox):
+    
+    output_dir = "/"
+
+    options = {"max_line_width": 80,
+               "max_line_count": 3,
+               "highlight_words": False}
     
     file = file_input.read()
 
@@ -119,8 +145,8 @@ def transcript_file(file_input, file_name, file_extension,
         result = openai.Audio.transcribe(model="whisper-1", file=media_file,
                                         response_format='verbose_json')
         if translate_checkBox:
-            translate_speech_to_english(pth, result['language'].capitalize(), 
-                                        translate_output_dir)
+            return write_some_files(result, options, output_dir, user_folder_path,
+                            files_path, file_name, translate_checkBox, translate_speech_to_english(pth))
 
 
     else:
@@ -132,14 +158,8 @@ def transcript_file(file_input, file_name, file_extension,
         result = openai.Audio.transcribe(model="whisper-1", file=media_file, 
                                         response_format='verbose_json')
         if translate_checkBox:
-            translate_speech_to_english(pth, result['language'].capitalize(), 
-                                        translate_output_dir)
-
-    output_dir = "/"
-
-    options = {"max_line_width": 80,
-               "max_line_count": 3,
-               "highlight_words": False}
-
+            return write_some_files(result, options, output_dir, user_folder_path,
+                            files_path, file_name, translate_checkBox, translate_speech_to_english(pth))
+            
     return write_some_files(result, options, output_dir, user_folder_path,
                             files_path, file_name, translate_checkBox)
