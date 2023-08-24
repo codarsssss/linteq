@@ -37,6 +37,7 @@ jQuery(document).ready(function($) {
     });
 
     // Mobile Navigation
+
     if ($('.header__nav').length) {
         var $mobile_nav = $('.header__nav').clone().prop({
             id: 'mobile-nav'
@@ -48,10 +49,10 @@ jQuery(document).ready(function($) {
         $('body').append($mobile_nav);
         $('body').prepend('<button type="button" id="mobile-nav-toggle"><i class="fa fa-bars"></i></button>');
         $('body').append('<div id="mobile-body-overly"></div>');
-        $('#mobile-nav').find('.menu-has-children').prepend('<i class="fa fa-chevron-down"></i>');
+        $('#mobile-nav').find('.list__item__drop-down').prepend('<i class="fa fa-chevron-down"></i>');
 
-        $(document).on('click', '.menu-has-children i', function(e) {
-            $(this).next().toggleClass('menu-item-active');
+        $(document).on('click', '.list__item__drop-down i', function(e) {
+            $(this).next().toggleClass('list__item__drop-down');
             $(this).nextAll('ul').eq(0).slideToggle();
             $(this).toggleClass("fa-chevron-up fa-chevron-down");
         });

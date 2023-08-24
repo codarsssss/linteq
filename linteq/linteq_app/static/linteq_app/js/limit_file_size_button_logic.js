@@ -5,7 +5,7 @@ const message= document.getElementById('er_message')
 button.disabled=true;
 inputFile.addEventListener('change', function() {
   const selectedFile = inputFile.files[0];
-  if (selectedFile.size > 1073741824) {
+  if (selectedFile.size > 25000000) {
     message.classList.remove('d-none');
   }
   else {

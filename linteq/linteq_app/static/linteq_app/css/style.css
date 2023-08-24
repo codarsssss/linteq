@@ -7,6 +7,7 @@ body {
 a {
     color: #3298b1;
     transition: 0.5s;
+    text-decoration: none;
 }
 
 a:hover,
@@ -201,6 +202,15 @@ h6 {
     .header__nav {
         display: none;
     }
+    .list__item__drop-down {
+        background-image: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .header__burger {
+        display: block;
+    }
 }
 
 
@@ -290,7 +300,7 @@ h6 {
 }
 
 .hero__descr {
-    max-width: 1200px;
+    max-width: 1120px;
     margin: 0;
     margin-bottom: 20px;
     font-size: 16px;
@@ -350,13 +360,20 @@ h6 {
     cursor: pointer;
 }
 
-#mobile-nav-toggle i {
-    color: #555;
+#mobile-nav-toggle .fa-times {
+    color: #FFF;
+}
+
+.fa-bars {
+    color: #000;
 }
 
 @media (max-width: 768px) {
     #mobile-nav-toggle {
         display: inline;
+    }
+    .list__item__drop-down:hover {
+        background-image: none;
     }
 }
 
@@ -364,16 +381,23 @@ h6 {
 /* Mobile Nav Styling */
 
 #mobile-nav {
+    display: none;
     position: fixed;
     top: 0;
     padding-top: 18px;
     bottom: 0;
     z-index: 998;
     background: rgba(52, 59, 64, 0.9);
-    left: -260px;
-    width: 260px;
+    left: -1000px;
+    width: 100%;
     overflow-y: auto;
     transition: 0.4s;
+}
+
+@media (max-width: 768px) {
+    #mobile-nav {
+        display: flex;
+    }
 }
 
 #mobile-nav ul {
@@ -416,7 +440,7 @@ h6 {
 }
 
 #mobile-nav ul .list__item__drop-down i.fa-chevron-up {
-    color: #2f1af0;
+    color: #FFF;
 }
 
 #mobile-nav ul .menu-item-active {
@@ -480,7 +504,6 @@ body.mobile-nav-active #mobile-nav-toggle {
 }
 
 .about__title {
-    padding-top: 40px;
     color: #000;
     font-weight: 700;
     font-size: 36px;
@@ -492,7 +515,6 @@ body.mobile-nav-active #mobile-nav-toggle {
     font-weight: 300;
     font-size: 18px;
     line-height: 26px;
-    font-style: italic;
 }
 
 #about .content p {
@@ -518,6 +540,13 @@ body.mobile-nav-active #mobile-nav-toggle {
     padding-bottom: 10px;
 }
 
+.about-img {
+    background-image: url('../img/hero.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+}
+
 
 /* Services Section
 --------------------------------*/
@@ -526,9 +555,13 @@ body.mobile-nav-active #mobile-nav-toggle {
     padding: 30px 0 0 0;
 }
 
-.services__card {
-    padding: 40px;
+.services__card-box {
     margin-bottom: 40px;
+}
+
+.services__card {
+    height: 100%;
+    padding: 40px;
     box-shadow: 10px 10px 15px rgba(73, 78, 92, 0.1);
     background: #fff;
     transition: 0.4s;
@@ -564,6 +597,10 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .services__card-title a {
     color: #444;
+}
+
+.services__card-title:hover a {
+    color: #3298b1;
 }
 
 .services__card-descr {
@@ -642,6 +679,10 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 .contact {
     padding: 30px 0;
+}
+
+.contact__descr {
+    max-width: 600px;
 }
 
 .contact__info {
@@ -753,12 +794,30 @@ body.mobile-nav-active #mobile-nav-toggle {
 
 /* SYS-UI */
 
+.sy
+/*s__form-select {
+    border: none;
+}*/
+
+.me-3 {
+    margin-right: 10px;
+}
+
 .input-style {
     padding: 20px;
     margin-bottom: 10px;
     border: 1px solid #dee2e6;
-    border-radius: 18px;
+    border-radius: 6px;
 }
+
+.sys__container label {
+    margin-right: 20px;
+}
+
+
+/*
+FOOTER
+*/
 
 footer {
     width: 100%;
@@ -767,10 +826,19 @@ footer {
     background-size: cover;
 }
 
+.footer__link:not(:last-child) {
+    margin-right: 26px;
+}
+
+.footer__link {
+    font-size: 40px;
+}
+
 .footertop {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    margin-bottom: 20px;
 }
 
 .boxfooter {
@@ -780,7 +848,7 @@ footer {
 
 .boxfooter .logo img {
     width: 180px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .boxfooter .terms {
@@ -817,7 +885,7 @@ footer {
     padding: 0px 40px;
 }
 
-.boxcopyright {
+.box__copyright {
     width: 400px;
     border-top: 1px solid #000;
     padding-top: 10px;
@@ -832,5 +900,18 @@ footer {
 @media (min-width: 1400px) {
     .container {
         max-width: 1140px;
+    }
+}
+
+@media (max-width: 768px) {
+    .footertop {
+        flex-direction: column;
+        align-items: center;
+    }
+    .boxfooter__about-us {
+    display: none;
+    }
+    .boxfooter__services {
+    display: none;
     }
 }
