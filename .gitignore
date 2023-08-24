@@ -161,5 +161,6 @@ cython_debug/
 
 /linteq/linteq_app/migrations/*.py
 /linteq/media/user_requests/*/
+/linteq/media/user_request_post_editing/*/
 
 /linteq/linteq/secret.py

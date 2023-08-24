@@ -10,6 +10,7 @@ from django.conf import settings
 from .notification_bot import send_telegram_message
 from .post_editing_logic import read_table_file
 
+
 def download_files(request, file_path):
     file_full_path = os.path.join(settings.MEDIA_ROOT, file_path)
     if os.path.exists(file_full_path):

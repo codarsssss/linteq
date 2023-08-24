@@ -35,6 +35,20 @@
         </div>
     {% endif %}
 
+    {% if result.editing %}
+    <div class="container mt-5">
+        <div class="row text-center"><h3>Результат</h3></div>
+        <div class="row justify-content-center">
+            <div class="m-5 w-auto">
+                <a href="{% url 'linteq_app:download' file_path=result.editing %}"
+                   class="btn btn-outline-primary" download><img
+                        src="{% static 'linteq_app/img/extensions/xlsx-file-format-symbol.png' %}" alt="SRT">
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     {% if result.translated_files.srt_tr %}
 
         <div class="container">
