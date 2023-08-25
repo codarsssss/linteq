@@ -10,6 +10,24 @@ from .models import FileData
 from docx import Document
 
 
+def create_file_for_gpt(document):
+
+    doc_dict = dict()
+
+    orig_len, tran_len = document.columns.ravel()
+
+    orig_words = list(map(str, document[orig_len].tolist()))
+    tran_words = list(map(str, document[tran_len].tolist()))
+
+    for i in range(len(orig_words)):
+        if tran_words[i] != 'nan':
+            doc_dict[orig_words[i]] = tran_words[i]
+
+    print(doc_dict)
+
+
+
+
 # Логика рефакторинга документа с расширением docx
 def editing_docx(file_path:str, output_folder_path:str,
                  file_name:str):
@@ -39,16 +57,17 @@ def editing_xlsx(file_path:str, output_folder_path:str,
     
     # Чтение файла ...
     result = pandas.read_excel(file_path)
-    
-    
-    # Тут будут махинации с файлом ...
+
+
+    # Тут махинации с файлом ...
+    create_file_for_gpt(result)
     
     
     # Сохранение файла
     df = pandas.DataFrame(result)
     df.to_excel(output_folder_path + file_name, index=False)
-    
-    
+
+
     return {
         'editing': output_folder_path[6:] + file_name
     }
