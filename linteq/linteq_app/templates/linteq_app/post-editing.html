@@ -7,7 +7,7 @@
     <body>
     <section>
         <div class="sys__container container mt-4">
-            <h1 class="sys__title mb-4">Транскрибировать аудио/видео файл в текст</h1>
+            <h1 class="sys__title mb-4">Постредактирование машинного перевода</h1>
             <form id="sys__conversion-form conversion-form" enctype="multipart/form-data" method="POST">
                 {% csrf_token %}
                 <div class="mb-3">
@@ -33,7 +33,7 @@
                             data-bs-target="#staticBackdrop">
                     <span class="sys__spinner-border spinner-border spinner-border-sm d-none" id="spinner" role="status"
                           aria-hidden="true"></span>
-                        Транскрибировать
+                        Обработать
                     </button>
                 </div>
             </form>

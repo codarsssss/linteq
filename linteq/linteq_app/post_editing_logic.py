@@ -1,6 +1,9 @@
 import re
 import os
+import time
+import openai
 import pandas
+import requests
 from .clear_logic import clear_func
 from transliterate import translit
 from django.conf import settings
@@ -8,24 +11,65 @@ from datetime import timedelta
 from datetime import datetime
 from .models import FileData
 from docx import Document
+from linteq.secret import OPENAI_TOKEN
+
+
+def chat_with_gpt(result):
+
+    # подготавливаю файл в словарь
+    dict_doc = create_file_for_gpt(result)
+
+    # начальный текст запроса
+    prompt = 'Выполни постредакцию машинного перевода так, чтобы текст стал уникальным, Исправь ошибки в переводе, сравнив текст машинного перевода с оригиналом. Текст Буду присылать попарно оригинал и перевод (Слева-оригинал, справа-перевод) через символ $ а ты мне возвращай такие же пары но с исправлением перевода. Понял?'
+
+    for orig, tran in dict_doc.items():
+
+        response = openai.Completion.create(
+            engine="davinci",
+            prompt=prompt,
+            api_key=OPENAI_TOKEN
+        )
+
+        time.sleep(20)
+
+        # новый текст запроса сформированный из оригинала и перевода
+        prompt = f'{orig}${tran}'
+
+        print(response.choices[0].text)
+
+    # response = openai.Completion.create(
+    #     engine="davinci",
+    #     prompt=prompt,
+    #     max_tokens=100,
+    #     n=1,
+    #     stop=None,
+    #     temperature=0.7,
+    #     top_p=1.0,
+    #     frequency_penalty=0.0,
+    #     presence_penalty=0.0,
+    #     api_key=OPENAI_TOKEN
+    # )
+    #
+    # print(response.choices[0].text)
 
 
 def create_file_for_gpt(document):
 
     doc_dict = dict()
 
+    #заголовки языка
     orig_len, tran_len = document.columns.ravel()
 
+    # каждый элемент добавляю в лист и применяю str
     orig_words = list(map(str, document[orig_len].tolist()))
     tran_words = list(map(str, document[tran_len].tolist()))
 
+    # фильтрую лишний row, если нет перевода
     for i in range(len(orig_words)):
         if tran_words[i] != 'nan':
             doc_dict[orig_words[i]] = tran_words[i]
 
-    print(doc_dict)
-
-
+    return doc_dict
 
 
 # Логика рефакторинга документа с расширением docx
@@ -60,7 +104,7 @@ def editing_xlsx(file_path:str, output_folder_path:str,
 
 
     # Тут махинации с файлом ...
-    create_file_for_gpt(result)
+    chat_with_gpt(result)
     
     
     # Сохранение файла
