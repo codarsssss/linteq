@@ -18,7 +18,7 @@ def editing_docx(file_path:str, output_folder_path:str,
     # Чтение файла ...
     doc = Document(file_path)
     for row in doc.paragraphs:
-        print(row.text)
+        print(row.text, 11111111111111111111)
     
     
     # Тут будут махинации с файлом ...
@@ -50,21 +50,21 @@ def editing_xlsx(file_path:str, output_folder_path:str,
     
     
     return {
-        'editing': output_folder_path + file_name
+        'editing': output_folder_path[6:] + file_name
     }
 
 
 def read_table_file(user_file):
-    
-    
+
+
     # Избавление от всех запрещённых символов в названии файла
     illegal_characters = r'[<>:"/\\|?*]'
     filename = re.sub(illegal_characters, '', translit(str(user_file), 'ru', reversed=True))
-    
-    
+
+
     # Создание родительской папки
     time_now = re.sub(illegal_characters, '', str(datetime.now()))
-    folder_path = f'/media/user_request_post_editing/{time_now}'
+    folder_path = f'media/user_request_post_editing/{time_now}'
     
     if os.path.exists(folder_path):
         print(f'[{time_now}] - read_table_file - {folder_path} - Папка уже создана.')
@@ -80,9 +80,8 @@ def read_table_file(user_file):
         print(f'[{time_now}] - read_table_file - {output_folder_path} - Выходная папка уже создана.')
     else:
         os.mkdir(output_folder_path)
-    
-    
-    # Вненсение путя в бд
+
+    # Вненсение пути в бд
     folder_delete_time = datetime.now() + timedelta(
         minutes=settings.STORAGE_TIME)
     
