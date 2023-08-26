@@ -23,19 +23,29 @@ def chat_with_gpt(result):
     prompt = 'Выполни постредакцию машинного перевода так, чтобы текст стал уникальным, Исправь ошибки в переводе, сравнив текст машинного перевода с оригиналом. Текст Буду присылать попарно оригинал и перевод (Слева-оригинал, справа-перевод) через символ $ а ты мне возвращай такие же пары но с исправлением перевода. Понял?'
 
     for orig, tran in dict_doc.items():
-
         response = openai.Completion.create(
             engine="davinci",
             prompt=prompt,
+            max_tokens=100,
+            n=1,
+            stop=None,
+            temperature=0.7,
+            timeout=15,
             api_key=OPENAI_TOKEN
         )
 
         time.sleep(20)
 
+        if response and response.choices:
+            print(prompt, 'ЭТО ПРОМТ!!!!!!!!!!!!!!!!!!!!')
+            res = response.choices[0].text.strip()
+        else:
+            print('чет не то')
+
+        print(res)
+
         # новый текст запроса сформированный из оригинала и перевода
         prompt = f'{orig}${tran}'
-
-        print(response.choices[0].text)
 
     # response = openai.Completion.create(
     #     engine="davinci",
