@@ -20,33 +20,32 @@ def chat_with_gpt(result):
     # подготавливаю файл в словарь
     dict_doc = create_file_for_gpt(result)
 
-    # начальный текст запроса
-    prompt = 'Выполни постредакцию машинного перевода так, чтобы текст стал уникальным, Исправь ошибки в переводе, сравнив текст машинного перевода с оригиналом. Текст Буду присылать попарно оригинал и перевод (Слева-оригинал, справа-перевод) через символ $ а ты мне возвращай такие же пары но с исправлением перевода. Понял?'
-    prev_mes = []
-    res = ''
+    res = dict()
+    count = 0
     for orig, tran in dict_doc.items():
-        response = openai.Completion.create(
-            engine="davinci",
-            prompt=prompt,
-            max_tokens=300,
-            n=1,
-            stop=None,
-            temperature=0,
-            timeout=15,
+
+        prompt = f'Исправь ошибки и сделай пост редакцию, что бы текст стал уникальным,оригинал текст "{orig}" проверь перевод "{tran}" и пришли мне готовый текст перевода в формате "Result: <исправленный текст перевода>"'
+
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": prompt},
+            ]
         )
 
-        time.sleep(20)
 
         if response and response.choices:
-            print(prompt, 'ЭТО ПРОМТ!!!!!!!!!!!!!!!!!!!!')
-            res = response.choices[0].text.strip()
+            result = response.choices[0].message['content']
+            res[orig] = result[7:]
+
         else:
             print('чет не то')
+        count += 1
+        print(result, 'ЭТО РЕЗУЛЬТАТ!!!!!!!!!!!!!!!!!!!!!!!!!!!!', len(dict_doc) - count)
 
-        print(res, 'ЭТО РЕЗУЛЬТАТ!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        prev_mes.append(prompt)
         # новый текст запроса сформированный из оригинала и перевода
-        prompt = f'{orig}${tran}'
+    print(res)
+
 
 
     # response = openai.Completion.create(
@@ -116,11 +115,12 @@ def editing_xlsx(file_path:str, output_folder_path:str,
 
 
     # Тут махинации с файлом ...
-    chat_with_gpt(result)
+
+
     
     
     # Сохранение файла
-    df = pandas.DataFrame(result)
+    df = pandas.DataFrame(chat_with_gpt(result))
     df.to_excel(output_folder_path + file_name, index=False)
 
 
