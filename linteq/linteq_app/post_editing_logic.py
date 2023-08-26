@@ -18,29 +18,30 @@ def chat_with_gpt(result):
     openai.api_key = OPENAI_TOKEN
 
     # подготавливаю файл в словарь
-    dict_doc = create_file_for_gpt(result)
+    dict_doc, langs = create_file_for_gpt(result)
 
     res = dict()
     count = 0
     for orig, tran in dict_doc.items():
 
-        prompt = f'Исправь ошибки и сделай пост редакцию, что бы текст стал уникальным,оригинал текст проверь перевод языка пришли мне только готовый текст перевода'
-
+        prompt = f'Изучив оригинал на языке {langs[0]} сделай пост-редакцию перевода на языке {langs[1]}, исправь ошибки и проверь текст на уникальность. Пришли мне только результат пост-редакции!'
+        prompt += f'Оригинал: {orig}; перевод: {tran}'
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": prompt},
-                {"role": "user", "content": f'оригинал-{orig}, перевод-{tran}'}
             ],
-            temperature=0
+            n=1,
+            stop=None,
+            temperature=0.0,
+            top_p=1.0,
+            frequency_penalty=0.0,
         )
 
-
         if response and response.choices:
-            result = response.choices[0].message['content']
+            result = response.choices[0].message.content
             print(response)
             res[orig] = result
-
         else:
             print('чет не то')
         count += 1
@@ -83,7 +84,7 @@ def create_file_for_gpt(document):
         if tran_words[i] != 'nan':
             doc_dict[orig_words[i]] = tran_words[i]
 
-    return doc_dict
+    return doc_dict, [orig_len, tran_len]
 
 
 # Логика рефакторинга документа с расширением docx
