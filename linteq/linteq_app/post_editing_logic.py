@@ -28,10 +28,10 @@ def chat_with_gpt(result):
         response = openai.Completion.create(
             engine="davinci",
             prompt=prompt,
-            max_tokens=100,
+            max_tokens=300,
             n=1,
             stop=None,
-            temperature=0.7,
+            temperature=0,
             timeout=15,
         )
 
