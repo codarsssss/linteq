@@ -24,19 +24,22 @@ def chat_with_gpt(result):
     count = 0
     for orig, tran in dict_doc.items():
 
-        prompt = f'Исправь ошибки и сделай пост редакцию, что бы текст стал уникальным,оригинал текст "{orig}" проверь перевод "{tran}" и пришли мне готовый текст перевода в формате "Result: <исправленный текст перевода>"'
+        prompt = f'Исправь ошибки и сделай пост редакцию, что бы текст стал уникальным,оригинал текст проверь перевод языка пришли мне только готовый текст перевода'
 
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": prompt},
-            ]
+                {"role": "user", "content": f'оригинал-{orig}, перевод-{tran}'}
+            ],
+            temperature=0
         )
 
 
         if response and response.choices:
             result = response.choices[0].message['content']
-            res[orig] = result[7:]
+            print(response)
+            res[orig] = result
 
         else:
             print('чет не то')
@@ -44,7 +47,7 @@ def chat_with_gpt(result):
         print(result, 'ЭТО РЕЗУЛЬТАТ!!!!!!!!!!!!!!!!!!!!!!!!!!!!', len(dict_doc) - count)
 
         # новый текст запроса сформированный из оригинала и перевода
-    print(res)
+    return res
 
 
 
@@ -120,7 +123,7 @@ def editing_xlsx(file_path:str, output_folder_path:str,
     
     
     # Сохранение файла
-    df = pandas.DataFrame(chat_with_gpt(result))
+    df = pandas.DataFrame(list(chat_with_gpt(result).items()), columns=['Ключ', 'Значение'])
     df.to_excel(output_folder_path + file_name, index=False)
 
 
