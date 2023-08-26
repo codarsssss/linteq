@@ -15,13 +15,15 @@ from linteq.secret import OPENAI_TOKEN
 
 
 def chat_with_gpt(result):
+    openai.api_key = OPENAI_TOKEN
 
     # подготавливаю файл в словарь
     dict_doc = create_file_for_gpt(result)
 
     # начальный текст запроса
     prompt = 'Выполни постредакцию машинного перевода так, чтобы текст стал уникальным, Исправь ошибки в переводе, сравнив текст машинного перевода с оригиналом. Текст Буду присылать попарно оригинал и перевод (Слева-оригинал, справа-перевод) через символ $ а ты мне возвращай такие же пары но с исправлением перевода. Понял?'
-
+    prev_mes = []
+    res = ''
     for orig, tran in dict_doc.items():
         response = openai.Completion.create(
             engine="davinci",
@@ -31,7 +33,6 @@ def chat_with_gpt(result):
             stop=None,
             temperature=0.7,
             timeout=15,
-            api_key=OPENAI_TOKEN
         )
 
         time.sleep(20)
@@ -42,10 +43,11 @@ def chat_with_gpt(result):
         else:
             print('чет не то')
 
-        print(res)
-
+        print(res, 'ЭТО РЕЗУЛЬТАТ!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        prev_mes.append(prompt)
         # новый текст запроса сформированный из оригинала и перевода
         prompt = f'{orig}${tran}'
+
 
     # response = openai.Completion.create(
     #     engine="davinci",
