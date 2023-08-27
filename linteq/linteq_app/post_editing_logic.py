@@ -14,23 +14,15 @@ from docx import Document
 from linteq.secret import OPENAI_TOKEN
 
 
-def chat_with_gpt(result, file_extension):
+def chat_with_gpt(result, langs=None):
+
     openai.api_key = OPENAI_TOKEN
 
-    match file_extension:
-
-        case "docx":
-            dict_doc = result
-
-            # пока их не получил, поэтому так
-            langs = ['De', 'Ru']
-        
-        case "xlsx":
-            # подготавливаю файл в словарь
-            dict_doc, langs = create_file_for_gpt(result)
-
-        case _:
-            pass
+    if langs:
+        dict_doc, _ = create_file_for_gpt(result)
+        langs = langs
+    else:
+        dict_doc, langs = create_file_for_gpt(result)
 
     res = dict()
     count = 0
@@ -52,39 +44,19 @@ def chat_with_gpt(result, file_extension):
 
         if response and response.choices:
             result = response.choices[0].message.content
-            print(response)
             res[orig] = result
         else:
             print('чет не то')
         count += 1
-        print(result, 'ЭТО РЕЗУЛЬТАТ!!!!!!!!!!!!!!!!!!!!!!!!!!!!', len(dict_doc) - count)
 
-        # новый текст запроса сформированный из оригинала и перевода
     return res
-
-
-
-    # response = openai.Completion.create(
-    #     engine="davinci",
-    #     prompt=prompt,
-    #     max_tokens=100,
-    #     n=1,
-    #     stop=None,
-    #     temperature=0.7,
-    #     top_p=1.0,
-    #     frequency_penalty=0.0,
-    #     presence_penalty=0.0,
-    #     api_key=OPENAI_TOKEN
-    # )
-    #
-    # print(response.choices[0].text)
 
 
 def create_file_for_gpt(document):
 
     doc_dict = dict()
 
-    #заголовки языка
+    # заголовки языка
     orig_len, tran_len = document.columns.ravel()
 
     # каждый элемент добавляю в лист и применяю str
@@ -99,22 +71,26 @@ def create_file_for_gpt(document):
     return doc_dict, [orig_len, tran_len]
 
 
-
 def editing_docx(file_path:str, output_folder_path:str, file_name:str):
-    test_dict = {}
 
     # Чтение файла ...
     doc = Document(file_path)
+    data = []
+
+    # Перебираем все таблицы в документе
     for table in doc.tables:
+        # Перебираем все строки в таблице
         for row in table.rows:
-            # Получаем список всех ячеек в строке
-            cells = row.cells
+            # Получаем текст каждой ячейки и добавляем в список данных
+            row_data = [cell.text for cell in row.cells]
+            data.append(row_data)
 
-            # Если в строке есть как минимум две ячейки
-            if len(cells) >= 2:
-                # Выводим текст первой и второй ячейки
-                test_dict[cells[0].text] = cells[1].text
+    orig, tran = data[0][0], data[0][1]
 
+    del data[0]
+
+    # Создаем DataFrame из списка данных
+    df = pandas.DataFrame(data)
 
     # Сохранение файла
 
@@ -123,9 +99,12 @@ def editing_docx(file_path:str, output_folder_path:str, file_name:str):
 
     # Создаем таблицу с двумя колонками
     new_table = doc.add_table(rows=0, cols=2)
+    row = new_table.add_row().cells
+    row[0].text = orig
+    row[1].text = tran
 
     # Заполняем таблицу значениями из словаря
-    for key, value in chat_with_gpt(test_dict, "docx").items():
+    for key, value in chat_with_gpt(df, [orig, tran]).items():
         # Добавляем новую строку
         row = new_table.add_row().cells
         # Записываем ключ в первую ячейку
@@ -136,29 +115,21 @@ def editing_docx(file_path:str, output_folder_path:str, file_name:str):
     # Сохраняем документ
     doc.save(output_folder_path + file_name)
 
-
     return {
         'editing': output_folder_path[6:] + file_name
             }
 
+
 # Логика рефакторинга документа с расширением xlsx     
 def editing_xlsx(file_path:str, output_folder_path:str,
                  file_name:str):
-    
-    
+
     # Чтение файла ...
     result = pandas.read_excel(file_path)
 
-
-    # Тут махинации с файлом ...
-
-
-    
-    
-    # Сохранение файла
-    df = pandas.DataFrame(list(chat_with_gpt(result).items()), columns=['Ключ', 'Значение'])
+    # Отправляем файл в chat_with_gpt и сохранение файла
+    df = pandas.DataFrame(list(chat_with_gpt(result).items()), columns=result.columns.ravel())
     df.to_excel(output_folder_path + file_name, index=False)
-
 
     return {
         'editing': output_folder_path[6:] + file_name
@@ -167,11 +138,9 @@ def editing_xlsx(file_path:str, output_folder_path:str,
 
 def read_table_file(user_file):
 
-
     # Избавление от всех запрещённых символов в названии файла
     illegal_characters = r'[<>:"/\\|?*]'
     filename = re.sub(illegal_characters, '', translit(str(user_file), 'ru', reversed=True))
-
 
     # Создание родительской папки
     time_now = re.sub(illegal_characters, '', str(datetime.now()))
@@ -182,8 +151,7 @@ def read_table_file(user_file):
     else:
         os.makedirs(folder_path)
         print(f'[{time_now}] - read_table_file - {folder_path} - Папка была успешно создана.')
-    
-    
+
     # Создание выходной папки
     output_folder_path = folder_path + '/output/'
     
@@ -217,8 +185,7 @@ def read_table_file(user_file):
     with open(file_path, 'wb') as f:
         f.write(file)
     print(f'[{time_now}] - read_table_file - {file_path} - Файл был успешно создан.')
-    
-    
+
     # Получение формата файла и выбор нужной функции
     file_extension = filename.split('.')[-1]
     
@@ -230,10 +197,13 @@ def read_table_file(user_file):
             return editing_docx(file_path=file_path, 
                                 output_folder_path=output_folder_path,
                                 file_name=filename)
-            
-        case 'xls':
+
+        case 'doc':
             print(f'[{time_now}] - read_table_file - {file_extension}\
-                - Начало обработки файла.')
+                        - Начало обработки файла.')
+            return editing_docx(file_path=file_path,
+                                output_folder_path=output_folder_path,
+                                file_name=filename)
             
         case 'xlsx':
             print(f'[{time_now}] - read_table_file - {file_extension}\
