@@ -14,11 +14,23 @@ from docx import Document
 from linteq.secret import OPENAI_TOKEN
 
 
-def chat_with_gpt(result):
+def chat_with_gpt(result, file_extension):
     openai.api_key = OPENAI_TOKEN
 
-    # подготавливаю файл в словарь
-    dict_doc, langs = create_file_for_gpt(result)
+    match file_extension:
+
+        case "docx":
+            dict_doc = result
+
+            # пока их не получил, поэтому так
+            langs = ['De', 'Ru']
+        
+        case "xlsx":
+            # подготавливаю файл в словарь
+            dict_doc, langs = create_file_for_gpt(result)
+
+        case _:
+            pass
 
     res = dict()
     count = 0
@@ -87,27 +99,47 @@ def create_file_for_gpt(document):
     return doc_dict, [orig_len, tran_len]
 
 
-# Логика рефакторинга документа с расширением docx
-def editing_docx(file_path:str, output_folder_path:str,
-                 file_name:str):
-    
-    
+
+def editing_docx(file_path:str, output_folder_path:str, file_name:str):
+    test_dict = {}
+
     # Чтение файла ...
     doc = Document(file_path)
-    for row in doc.paragraphs:
-        print(row.text, 11111111111111111111)
-    
-    
-    # Тут будут махинации с файлом ...
-    
-    
+    for table in doc.tables:
+        for row in table.rows:
+            # Получаем список всех ячеек в строке
+            cells = row.cells
+
+            # Если в строке есть как минимум две ячейки
+            if len(cells) >= 2:
+                # Выводим текст первой и второй ячейки
+                test_dict[cells[0].text] = cells[1].text
+
+
     # Сохранение файла
-    
-    
+
+    # Создаем новый документ
+    doc = Document()
+
+    # Создаем таблицу с двумя колонками
+    new_table = doc.add_table(rows=0, cols=2)
+
+    # Заполняем таблицу значениями из словаря
+    for key, value in chat_with_gpt(test_dict, "docx").items():
+        # Добавляем новую строку
+        row = new_table.add_row().cells
+        # Записываем ключ в первую ячейку
+        row[0].text = str(key)
+        # Записываем значение во вторую ячейку
+        row[1].text = str(value)
+
+    # Сохраняем документ
+    doc.save(output_folder_path + file_name)
+
+
     return {
-        'editing': row.text
-    }
-        
+        'editing': output_folder_path[6:] + file_name
+            }
 
 # Логика рефакторинга документа с расширением xlsx     
 def editing_xlsx(file_path:str, output_folder_path:str,
