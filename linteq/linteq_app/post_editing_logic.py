@@ -37,14 +37,15 @@ def chat_with_gpt(result, langs=None):
             ],
             n=1,
             stop=None,
-            temperature=0.0,
+            temperature=0.3,
             top_p=1.0,
-            frequency_penalty=0.0,
+            frequency_penalty=0.5,
         )
 
         if response and response.choices:
             result = response.choices[0].message.content
             res[orig] = result
+            print(result)
         else:
             print('чет не то')
         count += 1
@@ -75,7 +76,9 @@ def editing_docx(file_path:str, output_folder_path:str, file_name:str):
 
     # Чтение файла ...
     doc = Document(file_path)
+
     data = []
+
 
     # Перебираем все таблицы в документе
     for table in doc.tables:
@@ -170,38 +173,31 @@ def read_table_file(user_file):
     file_data_model.save()
     print(f'[{time_now}] - read_table_file - {folder_path} and {folder_delete_time}\
         - Путь и время удаления папки были успешно внесены в базу данных.')
-    
-    
+
     # Удаление файлов, у которых истекло время хранения
     clear_func()
-    
-    
+
     # Чтение файла
     file = user_file.read()
 
     # Сохранение файла
-    file_path = f'{folder_path}/{filename}'
+    file_extension = filename.split('.')[-1]
+    if file_extension == 'doc':
+        file_path = f'{folder_path}/{filename + "x"}'
+        file_extension += 'x'
+    else:
+        file_path = f'{folder_path}/{filename}'
     
     with open(file_path, 'wb') as f:
         f.write(file)
     print(f'[{time_now}] - read_table_file - {file_path} - Файл был успешно создан.')
 
-    # Получение формата файла и выбор нужной функции
-    file_extension = filename.split('.')[-1]
-    
     match file_extension:
-        
+
         case 'docx':
             print(f'[{time_now}] - read_table_file - {file_extension}\
                 - Начало обработки файла.')
             return editing_docx(file_path=file_path, 
-                                output_folder_path=output_folder_path,
-                                file_name=filename)
-
-        case 'doc':
-            print(f'[{time_now}] - read_table_file - {file_extension}\
-                        - Начало обработки файла.')
-            return editing_docx(file_path=file_path,
                                 output_folder_path=output_folder_path,
                                 file_name=filename)
             
