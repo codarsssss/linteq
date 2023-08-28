@@ -2,23 +2,22 @@ import os
 from datetime import timedelta
 from whisper.utils import WriteSRT, ResultWriter, WriteVTT, WriteTXT, WriteJSON
 import openai
+import re
 from .models import FileData
 from .clear_logic import clear_func
 from django.conf import settings
-from transliterate import slugify
+from transliterate import slugify, translit
 from linteq.secret import OPENAI_TOKEN
-
 
 openai.api_key = OPENAI_TOKEN
 
 
 def write_some_files(transcription_result: dict, options: dict, output_dir: str,
                      user_folder_path, files_path, file_name, translate_checkBox, translate_result=None):
-
     writers = {'srt': WriteSRT, 'vtt': WriteVTT, 'txt': WriteTXT, 'json': WriteJSON}
-    
+
     user_folder_path = user_folder_path + '/output'
-    
+
     os.mkdir(user_folder_path)
 
     result_writer = ResultWriter(output_dir)
@@ -30,15 +29,15 @@ def write_some_files(transcription_result: dict, options: dict, output_dir: str,
         with open(f"{user_folder_path}/{file_name}.{ext}", "w") as file:
             writer.write_result(transcription_result, file, options)
 
-
     if translate_checkBox:
         for ext, writer in writers.items():
             writer = writer(result_writer)
             with open(f"media/{files_path}/translate_output/{file_name}.{ext}", "w") as file:
                 writer.write_result(translate_result, file, options)
 
-        translated_files = {f'{ext}' + '_tr': f'{files_path}/translate_output/{file_name}.{ext}' for ext, _ in writers.items()}
-        
+        translated_files = {f'{ext}' + '_tr': f'{files_path}/translate_output/{file_name}.{ext}' for ext, _ in
+                            writers.items()}
+
     else:
         translated_files = ''
 
@@ -48,7 +47,7 @@ def write_some_files(transcription_result: dict, options: dict, output_dir: str,
 
 
 def translate_speech_to_english(file_path):
-    audio_file = open(file_path, "rb")
+    audio_file = open(file_path, "rb", encoding='utf-8')
     transcript = openai.Audio.translate("whisper-1", audio_file,
                                         response_format='verbose_json')
     return transcript
@@ -57,13 +56,14 @@ def translate_speech_to_english(file_path):
 def transcript_file(file_input, file_name, file_extension,
                     dt_now, translate_language,
                     translate_checkBox):
-    
+    illegal_characters = r'[<>:"/\\|?*%]'
+
     output_dir = "/"
 
     options = {"max_line_width": 80,
                "max_line_count": 3,
                "highlight_words": False}
-    
+
     file = file_input.read()
 
     slug_file_name = slugify(file_name)
@@ -71,10 +71,9 @@ def transcript_file(file_input, file_name, file_extension,
     if slug_file_name is None:
         slug_file_name = file_name
 
-
     file_data_model = FileData()
     file_data_model.delete_date = dt_now + timedelta(
-        minutes=settings.STORAGE_TIME)
+        hours=settings.STORAGE_TIME)
 
     dt_now = str(dt_now).replace(' ', '_')
     dt_now = str(dt_now).replace(':', '_')
@@ -93,31 +92,35 @@ def transcript_file(file_input, file_name, file_extension,
         os.mkdir(translate_output_dir)
 
     if file_name != '':
-        file_name = slug_file_name.replace('/', '')
-        file_name = file_name.replace('*', '')
+        file_name = slug_file_name.replace('/', '_')
+        file_name = file_name.replace('*', '_')
+        file_name = translit(str(file_name), 'ru', reversed=True)
+        file_name = re.sub(illegal_characters, '_', file_name)
         pth = f"{user_folder_path}/{file_name}.{file_extension}"
         with open(pth, 'wb') as f:
             f.write(file)
         media_file = open(pth, "rb")
         result = openai.Audio.transcribe(model="whisper-1", file=media_file,
-                                        response_format='verbose_json')
+                                         response_format='verbose_json')
         if translate_checkBox:
             return write_some_files(result, options, output_dir, user_folder_path,
-                            files_path, file_name, translate_checkBox, translate_speech_to_english(pth))
+                                    files_path, file_name, translate_checkBox, translate_speech_to_english(pth))
 
 
     else:
         file_name = str(file_input)[:-len(file_extension) - 1]
+        file_name = translit(str(file_name), 'ru', reversed=True)
+        file_name = re.sub(illegal_characters, '_', file_name)
         pth = f"{user_folder_path}/{file_name}.{file_extension}"
         with open(pth, 'wb') as f:
             f.write(file)
         media_file = open(pth, "rb")
-        result = openai.Audio.transcribe(model="whisper-1", file=media_file, 
-                                        response_format='verbose_json')
+        result = openai.Audio.transcribe(model="whisper-1", file=media_file,
+                                         response_format='verbose_json')
         if translate_checkBox:
             return write_some_files(result, options, output_dir, user_folder_path,
-                            files_path, file_name, translate_checkBox, translate_speech_to_english(pth))
-            
+                                    files_path, file_name, translate_checkBox, translate_speech_to_english(pth))
+
     return write_some_files(result, options, output_dir, user_folder_path,
                             files_path, file_name, translate_checkBox)
 

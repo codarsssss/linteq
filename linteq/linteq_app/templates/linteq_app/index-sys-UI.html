@@ -8,7 +8,7 @@
     <section>
         <div class="sys__container container mt-4">
             <h1 class="sys__title mb-4">Транскрибировать аудио/видео файл в текст</h1>
-            <form id="sys__conversion-form conversion-form" enctype="multipart/form-data" method="POST">
+            <form id="sys__conversion-form conversion-form" enctype="multipart/form-data" accept-charset="UTF-8" method="POST">
                 {% csrf_token %}
                 <div class="mb-3">
                     <label for="recorder" class="sys__form-label form-label">Загрузить файл</label>

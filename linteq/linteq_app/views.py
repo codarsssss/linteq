@@ -21,7 +21,7 @@ def download_files(request, file_path):
 def from_url_choice(request, endpoint:str):
     
     if settings.ALLOWED_HOSTS:
-        request.session['from_url'] = f'{settings.ALLOWED_HOSTS[0]}/{endpoint}'
+        request.session['from_url'] = f'http://{settings.ALLOWED_HOSTS[0]}/{endpoint}'
     else:
         request.session['from_url'] = f'http://127.0.0.1:8000/{endpoint}'
         
