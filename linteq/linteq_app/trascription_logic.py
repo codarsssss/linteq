@@ -13,7 +13,7 @@ openai.api_key = OPENAI_TOKEN
 
 
 def write_some_files(transcription_result: dict, options: dict, output_dir: str,
-                     user_folder_path, files_path, file_name, translate_checkBox, translate_result):
+                     user_folder_path, files_path, file_name, translate_checkBox, translate_result=None):
 
     writers = {'srt': WriteSRT, 'vtt': WriteVTT, 'txt': WriteTXT, 'json': WriteJSON}
     
