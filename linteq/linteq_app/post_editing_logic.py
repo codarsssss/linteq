@@ -1,6 +1,8 @@
 import re
 import os
+from doc import Document
 import time
+import docx
 import openai
 import pandas
 import requests
@@ -10,7 +12,6 @@ from django.conf import settings
 from datetime import timedelta
 from datetime import datetime
 from .models import FileData
-from docx import Document
 from linteq.secret import OPENAI_TOKEN
 
 
@@ -71,11 +72,9 @@ def create_file_for_gpt(document):
 
     return doc_dict, [orig_len, tran_len]
 
-
-def editing_docx(file_path:str, output_folder_path:str, file_name:str):
-
+def editing_doc(file_path:str, output_folder_path:str, file_name:str):
     # Чтение файла ...
-    doc = Document(file_path)
+    doc = doc.Document(file_path)
 
     data = []
 
@@ -98,7 +97,57 @@ def editing_docx(file_path:str, output_folder_path:str, file_name:str):
     # Сохранение файла
 
     # Создаем новый документ
-    doc = Document()
+    doc = doc.Document()
+
+    # Создаем таблицу с двумя колонками
+    new_table = doc.add_table(rows=0, cols=2)
+    row = new_table.add_row().cells
+    row[0].text = orig
+    row[1].text = tran
+
+    # Заполняем таблицу значениями из словаря
+    for key, value in chat_with_gpt(df, [orig, tran]).items():
+        # Добавляем новую строку
+        row = new_table.add_row().cells
+        # Записываем ключ в первую ячейку
+        row[0].text = str(key)
+        # Записываем значение во вторую ячейку
+        row[1].text = str(value)
+
+    # Сохраняем документ
+    doc.save(output_folder_path + file_name)
+
+    return {
+        'editing': output_folder_path[6:] + file_name
+            }
+
+def editing_docx(file_path:str, output_folder_path:str, file_name:str):
+
+    # Чтение файла ...
+    doc = docx.Document(file_path)
+
+    data = []
+
+
+    # Перебираем все таблицы в документе
+    for table in doc.tables:
+        # Перебираем все строки в таблице
+        for row in table.rows:
+            # Получаем текст каждой ячейки и добавляем в список данных
+            row_data = [cell.text for cell in row.cells]
+            data.append(row_data)
+
+    orig, tran = data[0][0], data[0][1]
+
+    del data[0]
+
+    # Создаем DataFrame из списка данных
+    df = pandas.DataFrame(data)
+
+    # Сохранение файла
+
+    # Создаем новый документ
+    doc = docx.Document()
 
     # Создаем таблицу с двумя колонками
     new_table = doc.add_table(rows=0, cols=2)
@@ -182,11 +231,7 @@ def read_table_file(user_file):
 
     # Сохранение файла
     file_extension = filename.split('.')[-1]
-    if file_extension == 'doc':
-        file_path = f'{folder_path}/{filename + "x"}'
-        file_extension += 'x'
-    else:
-        file_path = f'{folder_path}/{filename}'
+    file_path = f'{folder_path}/{filename}'
     
     with open(file_path, 'wb') as f:
         f.write(file)
@@ -198,6 +243,13 @@ def read_table_file(user_file):
             print(f'[{time_now}] - read_table_file - {file_extension}\
                 - Начало обработки файла.')
             return editing_docx(file_path=file_path, 
+                                output_folder_path=output_folder_path,
+                                file_name=filename)
+        
+        case 'doc':
+            print(f'[{time_now}] - read_table_file - {file_extension}\
+                - Начало обработки файла.')
+            return editing_doc(file_path=file_path, 
                                 output_folder_path=output_folder_path,
                                 file_name=filename)
             
