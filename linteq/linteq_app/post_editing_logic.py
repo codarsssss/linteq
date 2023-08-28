@@ -1,8 +1,6 @@
 import re
 import os
-from doc import Document
 import time
-import docx
 import openai
 import pandas
 import requests
@@ -12,11 +10,11 @@ from django.conf import settings
 from datetime import timedelta
 from datetime import datetime
 from .models import FileData
+from docx import Document
 from linteq.secret import OPENAI_TOKEN
 
 
 def chat_with_gpt(result, langs=None):
-
     openai.api_key = OPENAI_TOKEN
 
     if langs:
@@ -55,7 +53,6 @@ def chat_with_gpt(result, langs=None):
 
 
 def create_file_for_gpt(document):
-
     doc_dict = dict()
 
     # заголовки языка
@@ -72,12 +69,12 @@ def create_file_for_gpt(document):
 
     return doc_dict, [orig_len, tran_len]
 
-def editing_doc(file_path:str, output_folder_path:str, file_name:str):
+
+def editing_docx(file_path: str, output_folder_path: str, file_name: str):
     # Чтение файла ...
-    doc = doc.Document(file_path)
+    doc = Document(file_path)
 
     data = []
-
 
     # Перебираем все таблицы в документе
     for table in doc.tables:
@@ -97,7 +94,7 @@ def editing_doc(file_path:str, output_folder_path:str, file_name:str):
     # Сохранение файла
 
     # Создаем новый документ
-    doc = doc.Document()
+    doc = Document()
 
     # Создаем таблицу с двумя колонками
     new_table = doc.add_table(rows=0, cols=2)
@@ -119,63 +116,12 @@ def editing_doc(file_path:str, output_folder_path:str, file_name:str):
 
     return {
         'editing': output_folder_path[6:] + file_name
-            }
-
-def editing_docx(file_path:str, output_folder_path:str, file_name:str):
-
-    # Чтение файла ...
-    doc = docx.Document(file_path)
-
-    data = []
+    }
 
 
-    # Перебираем все таблицы в документе
-    for table in doc.tables:
-        # Перебираем все строки в таблице
-        for row in table.rows:
-            # Получаем текст каждой ячейки и добавляем в список данных
-            row_data = [cell.text for cell in row.cells]
-            data.append(row_data)
-
-    orig, tran = data[0][0], data[0][1]
-
-    del data[0]
-
-    # Создаем DataFrame из списка данных
-    df = pandas.DataFrame(data)
-
-    # Сохранение файла
-
-    # Создаем новый документ
-    doc = docx.Document()
-
-    # Создаем таблицу с двумя колонками
-    new_table = doc.add_table(rows=0, cols=2)
-    row = new_table.add_row().cells
-    row[0].text = orig
-    row[1].text = tran
-
-    # Заполняем таблицу значениями из словаря
-    for key, value in chat_with_gpt(df, [orig, tran]).items():
-        # Добавляем новую строку
-        row = new_table.add_row().cells
-        # Записываем ключ в первую ячейку
-        row[0].text = str(key)
-        # Записываем значение во вторую ячейку
-        row[1].text = str(value)
-
-    # Сохраняем документ
-    doc.save(output_folder_path + file_name)
-
-    return {
-        'editing': output_folder_path[6:] + file_name
-            }
-
-
-# Логика рефакторинга документа с расширением xlsx     
-def editing_xlsx(file_path:str, output_folder_path:str,
-                 file_name:str):
-
+# Логика рефакторинга документа с расширением xlsx
+def editing_xlsx(file_path: str, output_folder_path: str,
+                 file_name: str):
     # Чтение файла ...
     result = pandas.read_excel(file_path)
 
@@ -189,7 +135,6 @@ def editing_xlsx(file_path:str, output_folder_path:str,
 
 
 def read_table_file(user_file):
-
     # Избавление от всех запрещённых символов в названии файла
     illegal_characters = r'[<>:"/\\|?*]'
     filename = re.sub(illegal_characters, '', translit(str(user_file), 'ru', reversed=True))
@@ -197,7 +142,7 @@ def read_table_file(user_file):
     # Создание родительской папки
     time_now = re.sub(illegal_characters, '', str(datetime.now()))
     folder_path = f'media/user_request_post_editing/{time_now}'
-    
+
     if os.path.exists(folder_path):
         print(f'[{time_now}] - read_table_file - {folder_path} - Папка уже создана.')
     else:
@@ -206,7 +151,7 @@ def read_table_file(user_file):
 
     # Создание выходной папки
     output_folder_path = folder_path + '/output/'
-    
+
     if os.path.exists(output_folder_path):
         print(f'[{time_now}] - read_table_file - {output_folder_path} - Выходная папка уже создана.')
     else:
@@ -215,7 +160,7 @@ def read_table_file(user_file):
     # Вненсение пути в бд
     folder_delete_time = datetime.now() + timedelta(
         minutes=settings.STORAGE_TIME)
-    
+
     file_data_model = FileData()
     file_data_model.path = folder_path
     file_data_model.delete_date = folder_delete_time
@@ -231,8 +176,12 @@ def read_table_file(user_file):
 
     # Сохранение файла
     file_extension = filename.split('.')[-1]
-    file_path = f'{folder_path}/{filename}'
-    
+    if file_extension == 'doc':
+        file_path = f'{folder_path}/{filename + "x"}'
+        file_extension += 'x'
+    else:
+        file_path = f'{folder_path}/{filename}'
+
     with open(file_path, 'wb') as f:
         f.write(file)
     print(f'[{time_now}] - read_table_file - {file_path} - Файл был успешно создан.')
@@ -242,24 +191,17 @@ def read_table_file(user_file):
         case 'docx':
             print(f'[{time_now}] - read_table_file - {file_extension}\
                 - Начало обработки файла.')
-            return editing_docx(file_path=file_path, 
+            return editing_docx(file_path=file_path,
                                 output_folder_path=output_folder_path,
                                 file_name=filename)
-        
-        case 'doc':
-            print(f'[{time_now}] - read_table_file - {file_extension}\
-                - Начало обработки файла.')
-            return editing_doc(file_path=file_path, 
-                                output_folder_path=output_folder_path,
-                                file_name=filename)
-            
+
         case 'xlsx':
             print(f'[{time_now}] - read_table_file - {file_extension}\
                 - Начало обработки файла.')
-            return editing_xlsx(file_path=file_path, 
+            return editing_xlsx(file_path=file_path,
                                 output_folder_path=output_folder_path,
                                 file_name=filename)
-        
+
         case _:
             return print(f'[{time_now}] - read_table_file - {file_extension}\
                 - Этот формат не поддерживается.')
