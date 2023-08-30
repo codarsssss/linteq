@@ -1,13 +1,13 @@
 import os
-from datetime import timedelta
-from whisper.utils import WriteSRT, ResultWriter, WriteVTT, WriteTXT, WriteJSON
-import openai
 import re
+import openai
 from .models import FileData
-from .clear_logic import clear_func
+from datetime import timedelta
 from django.conf import settings
-from transliterate import slugify, translit
+from .clear_logic import clear_func
 from linteq.secret import OPENAI_TOKEN
+from transliterate import slugify, translit
+from whisper.utils import WriteSRT, ResultWriter, WriteVTT, WriteTXT, WriteJSON
 
 openai.api_key = OPENAI_TOKEN
 
@@ -47,8 +47,8 @@ def write_some_files(transcription_result: dict, options: dict, output_dir: str,
 
 
 def translate_speech_to_english(file_path):
-    audio_file = open(file_path, "rb", encoding='utf-8')
-    transcript = openai.Audio.translate("whisper-1", audio_file,
+    audio_file = open(file_path, "rb")
+    transcript = openai.Audio.translate("whisper-1", file=audio_file,
                                         response_format='verbose_json')
     return transcript
 

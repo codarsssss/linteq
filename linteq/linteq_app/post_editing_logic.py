@@ -4,6 +4,7 @@ import time
 import openai
 import pandas
 import requests
+from linteq.secret import OPENAI_TOKEN
 from .clear_logic import clear_func
 from transliterate import translit
 from django.conf import settings
@@ -11,7 +12,7 @@ from datetime import timedelta
 from datetime import datetime
 from .models import FileData
 from docx import Document
-from linteq.secret import OPENAI_TOKEN
+
 
 
 def chat_with_gpt(result, langs=None):
@@ -141,6 +142,7 @@ def read_table_file(user_file):
 
     # Создание родительской папки
     time_now = re.sub(illegal_characters, '', str(datetime.now()))
+    time_now = time_now.replace(' ', '_')
     folder_path = f'media/user_request_post_editing/{time_now}'
 
     if os.path.exists(folder_path):
